@@ -10,8 +10,8 @@ import androidx.core.content.ContextCompat;
 
 public class Enemy extends Rectangle {
 
-    public Enemy(Context context, double positionX, double positionY, float degree, int offset){
-        super(context, ContextCompat.getColor(context, R.color.enemy), positionX, positionY, degree, offset);
+    public Enemy(double positionX, double positionY, float degree, double width, double height, int color){
+        super(color, positionX, positionY, degree, width, height);
     }
 
     public void update() {

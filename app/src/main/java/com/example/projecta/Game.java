@@ -3,6 +3,7 @@ package com.example.projecta;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -11,6 +12,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+
+import java.util.Arrays;
 
 /**
  * Game Manages all objects in the game and is responsible for updating all states and
@@ -34,8 +37,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         //Make game objects
         joystick = new Joystick(275, 700, 100, 40);
-        player = new Player(getContext(), joystick, 1000, 500, 30);
-        enemy = new Enemy(getContext(), 0, 0, 45, 100);
+        player = new Player(joystick, 1000, 500, 30, ContextCompat.getColor(context, R.color.player));
+        enemy = new Enemy( 1000, 500, 20, 200, 60, ContextCompat.getColor(context, R.color.enemy));
 
         setFocusable(true);
     }
@@ -85,8 +88,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         drawFPS(canvas);
 
         joystick.draw(canvas);
-        player.draw(canvas);
         enemy.draw(canvas);
+        player.draw(canvas);
 
     }
 
@@ -113,5 +116,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick.update();
         player.update();
         enemy.update();
+//        Collision.circleToRect(player, enemy);
+        Log.e("TAG", "" + Collision.circleToRect(player, enemy));
     }
 }

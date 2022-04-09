@@ -3,6 +3,7 @@ package com.example.projecta;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -19,8 +20,8 @@ public class Player extends Circle {
     private final Joystick joystick;
 
 
-    public Player(Context context, Joystick joystick, double positionX, double positionY, double radius){
-        super(context, ContextCompat.getColor(context, R.color.player), positionX, positionY, radius);
+    public Player(Joystick joystick, double positionX, double positionY, double radius, int color){
+        super(color, positionX, positionY, radius);
         this.joystick = joystick;
 
     }
