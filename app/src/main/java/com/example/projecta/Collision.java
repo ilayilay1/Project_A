@@ -15,11 +15,11 @@ public class Collision {
                 (float)circle.positionY - (float)rectangle.positionY
         };
         matrix.mapPoints(circlePosition);
-        Log.d("PRINT", Arrays.toString(circlePosition));
+//        Log.d("PRINT", Arrays.toString(circlePosition));
 
         float[] circleDistance = {
-                (float) Math.abs(circlePosition[0]),
-                (float) Math.abs(circlePosition[1])
+                Math.abs(circlePosition[0]),
+                Math.abs(circlePosition[1])
         };
 
         if (circleDistance[0] > (rectangle.width/2 + circle.radius)) { return false; }

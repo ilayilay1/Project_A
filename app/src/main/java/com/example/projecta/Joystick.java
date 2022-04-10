@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-public class Joystick { //BIG NOTE, might want to make the Joystick able to be used anywhere within the screen, keep for later
+public class Joystick { // BIG NOTE, might want to make the Joystick able to be used anywhere within the screen, keep for later
 
     private Paint innerCirclePaint;
     private Paint outerCirclePaint;
@@ -23,21 +23,21 @@ public class Joystick { //BIG NOTE, might want to make the Joystick able to be u
     private double actuatorY;
 
     public Joystick(int centerPositionX, int centerPositionY, int outerCircleRadius, int innerCircleRadius){
-        // Outer and inner circles to make the joystick
+        //  Outer and inner circles to make the joystick
         outerCircleCenterPositionX = centerPositionX;
         outerCircleCenterPositionY = centerPositionY;
         innerCircleCenterPositionX = centerPositionX;
         innerCircleCenterPositionY = centerPositionY;
 
-        //Radius of circles
+        // Radius of circles
         this.outerCircleRadius = outerCircleRadius;
         this.innerCircleRadius = innerCircleRadius;
 
-        // Paint of circles
+        //  Paint of circles
         outerCirclePaint = new Paint();
         outerCirclePaint.setColor(Color.WHITE);
         outerCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        outerCirclePaint.setAlpha(100); //Lowers the opacity of the outer joystick
+        outerCirclePaint.setAlpha(100); // Lowers the opacity of the outer joystick
 
         innerCirclePaint = new Paint();
         innerCirclePaint.setColor(Color.WHITE);
@@ -45,13 +45,13 @@ public class Joystick { //BIG NOTE, might want to make the Joystick able to be u
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawCircle( //Outer circle
+        canvas.drawCircle( // Outer circle
                 outerCircleCenterPositionX,
                 outerCircleCenterPositionY,
                 outerCircleRadius,
                 outerCirclePaint);
 
-        canvas.drawCircle( //Inner circle
+        canvas.drawCircle( // Inner circle
                 innerCircleCenterPositionX,
                 innerCircleCenterPositionY,
                 innerCircleRadius,

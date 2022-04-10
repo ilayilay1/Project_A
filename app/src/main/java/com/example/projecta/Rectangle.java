@@ -28,7 +28,7 @@ public abstract class Rectangle extends GameObject {
         canvas.save();
         canvas.translate((float)positionX, (float)positionY);
         canvas.rotate(degree); //insert random angle
-        canvas.drawRect((float)(-width/2), (float)(-height/2), (float)(width/2), (float)(height/2), paint); //switch 20's later with random height
+        canvas.drawRect((float)(-width/2), (float)(-height/2), (float)(width/2), (float)(height/2), paint);
         canvas.restore();
     }
 }

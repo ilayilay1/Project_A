@@ -29,24 +29,24 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     public Game(Context context) {
         super(context);
-        //Gets the surface holder and adds callback
+        // Gets the surface holder and adds callback
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
 
         gameLoop = new GameLoop(this, surfaceHolder);
 
-        //Make game objects
+        // Make game objects
         joystick = new Joystick(275, 700, 100, 40);
         player = new Player(joystick, 1000, 500, 30, ContextCompat.getColor(context, R.color.player));
-        enemy = new Enemy( 1000, 500, 20, 200, 60, ContextCompat.getColor(context, R.color.enemy));
+        enemy = new Enemy( 1000, 500, 90, 600, 100, ContextCompat.getColor(context, R.color.enemy));
 
         setFocusable(true);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        //Handle touch event actions
-        switch(event.getAction()){
+        // Handle touch event actions
+        switch(event.getActionMasked()){
             case MotionEvent.ACTION_DOWN:
             if(joystick.isPressed((double)event.getX(), (double)event.getY())){
                 joystick.setIsPressed(true);
@@ -60,6 +60,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             case MotionEvent.ACTION_UP:
                 joystick.setIsPressed(false);
                 joystick.resetActuator();
+                return true;
+            case MotionEvent.ACTION_POINTER_DOWN: // Secondary touch event mainly to trigger the dash method for the player
+                if(joystick.getIsPressed()){
+                    player.dashForward();
+                    Log.e("TAG", "Player dash!");
+                }
+                return true;
+            case MotionEvent.ACTION_POINTER_UP: // Secondary finger lifted
                 return true;
         }
 
@@ -112,11 +120,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        //Update game state
+        // Update game state
         joystick.update();
         player.update();
         enemy.update();
-//        Collision.circleToRect(player, enemy);
-        Log.e("TAG", "" + Collision.circleToRect(player, enemy));
+//         Log.e("TAG", "" + Collision.circleToRect(player, enemy));
     }
 }
