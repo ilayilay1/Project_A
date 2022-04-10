@@ -24,7 +24,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Player player;
     private final Joystick joystick;
     private final Enemy enemy;
-    private GameLoop gameLoop;
+    private final GameLoop gameLoop;
 
 
     public Game(Context context) {
@@ -48,25 +48,29 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Handle touch event actions
         switch(event.getActionMasked()){
             case MotionEvent.ACTION_DOWN:
-            if(joystick.isPressed((double)event.getX(), (double)event.getY())){
+            if(joystick.isPressed(event.getX(), event.getY())){
                 joystick.setIsPressed(true);
             }
                 return true;
+
             case MotionEvent.ACTION_MOVE:
                 if(joystick.getIsPressed()){
-                    joystick.setActuator((double)event.getX(), (double)event.getY());
+                    joystick.setActuator(event.getX(), event.getY());
                 }
                 return true;
+
             case MotionEvent.ACTION_UP:
                 joystick.setIsPressed(false);
                 joystick.resetActuator();
                 return true;
+
             case MotionEvent.ACTION_POINTER_DOWN: // Secondary touch event mainly to trigger the dash method for the player
-                if(joystick.getIsPressed()){
+                if(joystick.getIsPressed() && !player.getCooldown()){
                     player.dashForward();
-                    Log.e("TAG", "Player dash!");
+//                    Log.e("TAG", "Player dash!");
                 }
                 return true;
+
             case MotionEvent.ACTION_POINTER_UP: // Secondary finger lifted
                 return true;
         }
