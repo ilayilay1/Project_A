@@ -8,6 +8,7 @@ import android.graphics.Paint;
  * Circle is an abstract class which implements a draw method from GameObject for drawing the object
  * as a circle
  */
+
 public abstract class Circle extends GameObject{
 
     protected double radius;

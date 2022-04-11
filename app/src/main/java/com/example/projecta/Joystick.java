@@ -4,6 +4,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+/**
+ * Joystick is a tool the user interacts with when wanting to control the Player object
+ */
+
 public class Joystick { // BIG NOTE, might want to make the Joystick able to be used anywhere within the screen, keep for later
 
     private Paint innerCirclePaint;

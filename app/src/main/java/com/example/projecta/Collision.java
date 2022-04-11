@@ -6,6 +6,10 @@ import android.util.Log;
 
 import java.util.Arrays;
 
+/**
+ * The Collision class contains all types of interactions between the Player and the Enemy class
+ */
+
 public class Collision {
     public static boolean circleToRect(Circle circle, Rectangle rectangle){
         Matrix matrix =  new Matrix();

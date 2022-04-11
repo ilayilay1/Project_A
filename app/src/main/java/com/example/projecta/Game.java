@@ -22,6 +22,7 @@ import java.util.Arrays;
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Player player;
+    private final CooldownBar cooldownBar;
     private final Joystick joystick;
     private final Enemy enemy;
     private final GameLoop gameLoop;
@@ -37,7 +38,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         // Make game objects
         joystick = new Joystick(275, 700, 100, 40);
-        player = new Player(joystick, 1000, 500, 30, ContextCompat.getColor(context, R.color.player));
+        cooldownBar = new CooldownBar(1000, 450, 0, 0, 10, ContextCompat.getColor(context, R.color.white)); //Width is temporarily 0 because the cooldown bar is a set length of 100
+        player = new Player(cooldownBar ,joystick, 1000, 500, 30, ContextCompat.getColor(context, R.color.player));
         enemy = new Enemy( 1000, 500, 90, 600, 100, ContextCompat.getColor(context, R.color.enemy));
 
         setFocusable(true);
@@ -102,6 +104,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick.draw(canvas);
         enemy.draw(canvas);
         player.draw(canvas);
+        cooldownBar.draw(canvas);
 
     }
 
@@ -124,8 +127,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        // Update game state
+        // Update game state : the order of appearance affects the layers of the objects on the screen
         joystick.update();
+        cooldownBar.update();
         player.update();
         enemy.update();
 //         Log.e("TAG", "" + Collision.circleToRect(player, enemy));

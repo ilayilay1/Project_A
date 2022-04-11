@@ -7,6 +7,11 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 
+/**
+ * Rectangle is an abstract class which implements a draw method from GameObject for drawing the object
+ * as a rectangle
+ */
+
 public abstract class Rectangle extends GameObject {
 
     protected Paint paint;
@@ -27,7 +32,7 @@ public abstract class Rectangle extends GameObject {
     public void draw(Canvas canvas) {
         canvas.save();
         canvas.translate((float)positionX, (float)positionY);
-        canvas.rotate(degree); //insert random angle
+        canvas.rotate(degree);
         canvas.drawRect((float)(-width/2), (float)(-height/2), (float)(width/2), (float)(height/2), paint);
         canvas.restore();
     }

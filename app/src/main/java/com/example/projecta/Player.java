@@ -11,17 +11,20 @@ import java.util.TimerTask;
  * Player is the main character of the game, which the user can control with a touch joystick.
  * The player class is an extension of a Circle, which is an extension of a GameObject
  */
+
 public class Player extends Circle {
     private static final double SPEED_PIXELS_PER_SECOND = 400.0;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private final Joystick joystick;
+    private final CooldownBar cooldownBar;
     private boolean dashCooldown = false, invincible = false; //No cooldown for dash and player isn't immune
     Handler handler = new Handler();
 
 
-    public Player(Joystick joystick, double positionX, double positionY, double radius, int color){
+    public Player(CooldownBar cooldownBar ,Joystick joystick, double positionX, double positionY, double radius, int color){
         super(color, positionX, positionY, radius);
         this.joystick = joystick;
+        this.cooldownBar = cooldownBar;
 
     }
 
@@ -45,6 +48,8 @@ public class Player extends Circle {
             positionY = 0 + radius;
         else
             positionY += velocityY;
+
+        cooldownBar.trackPlayer(positionX, positionY); // Tracks the cooldown bar to the new Player location
     }
 
     public void setPosition(double positionX, double positionY) { // Irrelevant for now, was used for testing, might use in future for extra features
@@ -56,6 +61,7 @@ public class Player extends Circle {
 
         dashCooldown = true;
         invincible = true;
+        cooldownBar.startCountdown(); // Start cooldown bar countdown
 
         new Timer().schedule(new TimerTask() { // Cooldown removed after 1.5 seconds
             @Override
