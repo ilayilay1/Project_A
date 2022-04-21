@@ -13,7 +13,9 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Game Manages all objects in the game and is responsible for updating all states and
@@ -24,8 +26,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Player player;
     private final CooldownBar cooldownBar;
     private final Joystick joystick;
-    private final Enemy enemy;
     private final GameLoop gameLoop;
+    public static List<Enemy> enemies = new ArrayList<>();
 
 
     public Game(Context context) {
@@ -40,8 +42,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick = new Joystick(275, 700, 100, 40);
         cooldownBar = new CooldownBar(1000, 450, 0, 0, 10, ContextCompat.getColor(context, R.color.white)); //Width is temporarily 0 because the cooldown bar is a set length of 100
         player = new Player(cooldownBar ,joystick, 1000, 500, 30, ContextCompat.getColor(context, R.color.player));
-        enemy = new Enemy( 1000, 500, 90, 600, 100, ContextCompat.getColor(context, R.color.enemy));
-
+        enemies.add(new Enemy( 1000, 500, 90, 600, 100, ContextCompat.getColor(context, R.color.enemy)));
         setFocusable(true);
     }
 
@@ -102,7 +103,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         drawFPS(canvas);
 
         joystick.draw(canvas);
-        enemy.draw(canvas);
+        for (Enemy enemy: enemies)
+            enemy.draw(canvas);
         player.draw(canvas);
         cooldownBar.draw(canvas);
 
@@ -131,7 +133,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick.update();
         cooldownBar.update();
         player.update();
-        enemy.update();
-//         Log.e("TAG", "" + Collision.circleToRect(player, enemy));
+        for (Enemy enemy: enemies)
+            enemy.update();
     }
 }

@@ -2,6 +2,11 @@ package com.example.projecta;
 
 import android.animation.ValueAnimator;
 
+/**
+ * CooldownBar is an object created for the player to predict when they would be able to use the dash ability again which is derived from the Player class
+ * The CooldownBar class is an extension of a Rectangle, which is an extension of a GameObject
+ */
+
 public class CooldownBar extends Rectangle {
 
     public CooldownBar(double positionX, double positionY, float degree, double width, double height, int color){

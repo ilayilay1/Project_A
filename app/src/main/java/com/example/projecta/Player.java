@@ -1,8 +1,13 @@
 package com.example.projecta;
 
 import android.animation.ValueAnimator;
+import android.graphics.Color;
+import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+
+import androidx.core.content.ContextCompat;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,15 +22,17 @@ public class Player extends Circle {
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private final Joystick joystick;
     private final CooldownBar cooldownBar;
-    private boolean dashCooldown = false, invincible = false; //No cooldown for dash and player isn't immune
+    private boolean dashCooldown = false, invincible = false, isDamaged = false; //No cooldown for dash and player isn't immune
     Handler handler = new Handler();
+    private long lastDamageTaken;
+    private int color;
 
 
     public Player(CooldownBar cooldownBar ,Joystick joystick, double positionX, double positionY, double radius, int color){
         super(color, positionX, positionY, radius);
         this.joystick = joystick;
         this.cooldownBar = cooldownBar;
-
+        this.color = color;
     }
 
 
@@ -50,11 +57,39 @@ public class Player extends Circle {
             positionY += velocityY;
 
         cooldownBar.trackPlayer(positionX, positionY); // Tracks the cooldown bar to the new Player location
+
+            for (Enemy enemy: Game.enemies)
+                if(Collision.circleToRect(this, enemy) && !this.getDamageStatus() && !invincible)
+                {
+                    isDamaged = true;
+                    invincible = true;
+                    lastDamageTaken = System.currentTimeMillis();
+                    break;
+                }
+            if(isDamaged){
+                damageAnimation();
+        }
     }
 
     public void setPosition(double positionX, double positionY) { // Irrelevant for now, was used for testing, might use in future for extra features
         this.positionX = positionX;
         this.positionY = positionY;
+    }
+
+    public void damageAnimation(){ // Activates in a scenario where the player gets hit by something resulting in life lost and damage taken
+
+        long deltaT = System.currentTimeMillis() - lastDamageTaken;
+        if(deltaT > 3000){
+            invincible = false;
+            isDamaged = false;
+            paint.setColor(color);
+            return;
+        }
+        if (deltaT % 500 < 250)
+            paint.setColor(Color.WHITE);
+        else
+            paint.setColor(color);
+
     }
 
     public void dashForward() { // Player activates dash ability
@@ -63,19 +98,25 @@ public class Player extends Circle {
         invincible = true;
         cooldownBar.startCountdown(); // Start cooldown bar countdown
 
-        new Timer().schedule(new TimerTask() { // Cooldown removed after 1.5 seconds
+        final int[] number = {0};
+        final long[] mTimeLeftInMillis = {1500};
+        CountDownTimer mCountDownTimer = new CountDownTimer(mTimeLeftInMillis[0], 300){
+// Timer's functionality is after 1.5 seconds the cooldown wears off and after 0.3 seconds the player is no longer invincible
             @Override
-            public void run() {
-                dashCooldown = false;
+            public void onTick(long millisUntilFinished) {
+                mTimeLeftInMillis[0] = millisUntilFinished;
+                number[0]++;
+                if(number[0] == 2 && !isDamaged)
+                    invincible = false;
+                Log.e("TAG", "" + invincible);
             }
-        }, 1500);
 
-        new Timer().schedule(new TimerTask() { // Removes the invincibility given to the player during the dash
             @Override
-            public void run() {
-                invincible = false;
+            public void onFinish() {
+                dashCooldown = false;
+                number[0] = 0;
             }
-        }, 300);
+        }.start();
 
         velocityX = joystick.getActuatorX(); // Sets distance of the vector to a set distance
         velocityY = joystick.getActuatorY();
@@ -125,5 +166,8 @@ public class Player extends Circle {
 
     public boolean getCooldown() {
         return dashCooldown;
+    }
+    public boolean getDamageStatus() {
+        return isDamaged;
     }
 }
