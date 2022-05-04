@@ -79,13 +79,13 @@ public class Player extends Circle {
     public void damageAnimation(){ // Activates in a scenario where the player gets hit by something resulting in life lost and damage taken
 
         long deltaT = System.currentTimeMillis() - lastDamageTaken;
-        if(deltaT > 3000){
+        if(deltaT > 2500){
             invincible = false;
             isDamaged = false;
             paint.setColor(color);
             return;
         }
-        if (deltaT % 500 < 250)
+        if (deltaT % 300 < 150)
             paint.setColor(Color.WHITE);
         else
             paint.setColor(color);

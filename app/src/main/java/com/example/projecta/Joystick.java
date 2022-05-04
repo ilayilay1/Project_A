@@ -10,21 +10,15 @@ import android.graphics.Paint;
 
 public class Joystick { // BIG NOTE, might want to make the Joystick able to be used anywhere within the screen, keep for later
 
-    private Paint innerCirclePaint;
-    private Paint outerCirclePaint;
+    private Paint innerCirclePaint, outerCirclePaint;
 
-    private int innerCircleRadius;
-    private int outerCircleRadius;
-    private int outerCircleCenterPositionX;
-    private int outerCircleCenterPositionY;
-    private int innerCircleCenterPositionX;
-    private int innerCircleCenterPositionY;
+    private int innerCircleRadius, outerCircleRadius, outerCircleCenterPositionX, outerCircleCenterPositionY,
+            innerCircleCenterPositionX, innerCircleCenterPositionY;
 
-    private double joystickCenterToTouchDistance;
-    private boolean isPressed;
+    private double joystickCenterToTouchDistance, actuatorX, actuatorY;
 
-    private double actuatorX;
-    private double actuatorY;
+    private boolean isPressed, isVisible = false;
+
 
     public Joystick(int centerPositionX, int centerPositionY, int outerCircleRadius, int innerCircleRadius){
         //  Outer and inner circles to make the joystick
@@ -49,17 +43,19 @@ public class Joystick { // BIG NOTE, might want to make the Joystick able to be 
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawCircle( // Outer circle
-                outerCircleCenterPositionX,
-                outerCircleCenterPositionY,
-                outerCircleRadius,
-                outerCirclePaint);
+        if(isVisible){
+            canvas.drawCircle( // Outer circle
+                    outerCircleCenterPositionX,
+                    outerCircleCenterPositionY,
+                    outerCircleRadius,
+                    outerCirclePaint);
 
-        canvas.drawCircle( // Inner circle
-                innerCircleCenterPositionX,
-                innerCircleCenterPositionY,
-                innerCircleRadius,
-                innerCirclePaint);
+            canvas.drawCircle( // Inner circle
+                    innerCircleCenterPositionX,
+                    innerCircleCenterPositionY,
+                    innerCircleRadius,
+                    innerCirclePaint);
+        }
     }
 
     public void update() {
@@ -104,6 +100,20 @@ public class Joystick { // BIG NOTE, might want to make the Joystick able to be 
     public void resetActuator() {
         actuatorX = 0.0;
         actuatorY = 0.0;
+    }
+
+    public void setLocation(int centerPositionX, int centerPositionY){
+        outerCircleCenterPositionX = centerPositionX;
+        outerCircleCenterPositionY = centerPositionY;
+        innerCircleCenterPositionX = centerPositionX;
+        innerCircleCenterPositionY = centerPositionY;
+    }
+
+    public void setVisible(boolean isVisible){
+        this.isVisible = isVisible;
+    }
+    public boolean getVisible(){
+        return isVisible;
     }
 
     public double getActuatorX() {

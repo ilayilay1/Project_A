@@ -51,9 +51,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Handle touch event actions
         switch(event.getActionMasked()){
             case MotionEvent.ACTION_DOWN:
-            if(joystick.isPressed(event.getX(), event.getY())){
                 joystick.setIsPressed(true);
-            }
+                joystick.setLocation((int)event.getX(), (int)event.getY());
+                joystick.setVisible(true);
                 return true;
 
             case MotionEvent.ACTION_MOVE:
@@ -65,6 +65,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             case MotionEvent.ACTION_UP:
                 joystick.setIsPressed(false);
                 joystick.resetActuator();
+                joystick.setVisible(false);
                 return true;
 
             case MotionEvent.ACTION_POINTER_DOWN: // Secondary touch event mainly to trigger the dash method for the player
