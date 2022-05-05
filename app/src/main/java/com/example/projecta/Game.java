@@ -28,6 +28,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Joystick joystick;
     private final GameLoop gameLoop;
     public static List<Enemy> enemies = new ArrayList<>();
+    private int firstFingerIndex;
 
 
     public Game(Context context) {
@@ -51,6 +52,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Handle touch event actions
         switch(event.getActionMasked()){
             case MotionEvent.ACTION_DOWN:
+                firstFingerIndex = event.getActionIndex();
                 joystick.setIsPressed(true);
                 joystick.setLocation((int)event.getX(), (int)event.getY());
                 joystick.setVisible(true);
@@ -69,13 +71,21 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 return true;
 
             case MotionEvent.ACTION_POINTER_DOWN: // Secondary touch event mainly to trigger the dash method for the player
-                if(joystick.getIsPressed() && !player.getCooldown()){
+                if(joystick.getIsPressed() && !player.getCooldown())
                     player.dashForward();
-//                    Log.e("TAG", "Player dash!");
+                if(!joystick.getIsPressed()){ // In case player lifts the joystick finger and continues to place the dashing finger all whilst trying to move with the joystick
+                    joystick.setIsPressed(true);
+                    joystick.setLocation((int)event.getX(), (int)event.getY());
+                    joystick.setVisible(true);
                 }
                 return true;
 
             case MotionEvent.ACTION_POINTER_UP: // Secondary finger lifted
+                if(firstFingerIndex == event.getActionIndex()){ // In case the player removes the joystick finger while having the dashing finger on the screen, removes the joystick
+                    joystick.setIsPressed(false);
+                    joystick.resetActuator();
+                    joystick.setVisible(false);
+                }
                 return true;
         }
 

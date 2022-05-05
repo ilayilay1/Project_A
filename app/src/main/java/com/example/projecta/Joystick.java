@@ -3,6 +3,7 @@ package com.example.projecta;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 /**
  * Joystick is a tool the user interacts with when wanting to control the Player object
