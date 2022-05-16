@@ -11,7 +11,10 @@ import java.util.Arrays;
  */
 
 public class Collision {
-    public static boolean circleToRect(Circle circle, Rectangle rectangle){
+    public static boolean circleToRect(Circle circle, Rectangle rectangle, boolean isDeadly){
+        if (!isDeadly) // If the attack isn't generated yet, cancel function
+            return false;
+
         Matrix matrix =  new Matrix();
         matrix.setRotate(-rectangle.degree);
         float[] circlePosition = {
@@ -36,6 +39,10 @@ public class Collision {
 
         return cornerDistance_sq <= Math.pow(circle.radius, 2);
 
+    }
+
+    public static boolean circlesToCircle(Circle circle, Circle circle2){
+        return false;
     }
 
 }

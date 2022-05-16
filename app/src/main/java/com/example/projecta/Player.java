@@ -59,7 +59,7 @@ public class Player extends Circle {
         cooldownBar.trackPlayer(positionX, positionY); // Tracks the cooldown bar to the new Player location
 
         for (Enemy enemy : Game.enemies)
-            if (Collision.circleToRect(this, enemy) && !this.getDamageStatus() && !invincible) {
+            if (Collision.circleToRect(this, enemy, enemy.getDeadly()) && !this.getDamageStatus() && !invincible) {
                 isDamaged = true;
                 invincible = true;
                 lastDamageTaken = System.currentTimeMillis();

@@ -1,6 +1,7 @@
 package com.example.projecta;
 
 import android.animation.ValueAnimator;
+import android.graphics.Color;
 
 /**
  * CooldownBar is an object created for the player to predict when they would be able to use the dash ability again which is derived from the Player class

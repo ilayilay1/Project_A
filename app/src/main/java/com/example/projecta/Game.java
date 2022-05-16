@@ -27,7 +27,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final CooldownBar cooldownBar;
     private final Joystick joystick;
     private final GameLoop gameLoop;
-    public static List<Enemy> enemies = new ArrayList<>();
+    public static ArrayList<Enemy> enemies = new ArrayList<>();
+    public static  ArrayList<Enemy> enemiesToDelete = new ArrayList<>();
     private int firstFingerIndex;
 
 
@@ -40,10 +41,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameLoop = new GameLoop(this, surfaceHolder);
 
         // Make game objects
-        joystick = new Joystick(275, 700, 100, 40);
+        joystick = new Joystick(275, 700, 100, 40); // X and Y coordinates are irrelevant after v1.5
         cooldownBar = new CooldownBar(1000, 450, 0, 0, 10, ContextCompat.getColor(context, R.color.white)); //Width is temporarily 0 because the cooldown bar is a set length of 100
         player = new Player(cooldownBar ,joystick, 1000, 500, 30, ContextCompat.getColor(context, R.color.player));
-        enemies.add(new Enemy( 1000, 500, 90, 600, 100, ContextCompat.getColor(context, R.color.enemy)));
+
+        enemies.add(new Enemy( 1000, 500, 45, 100, 2000,
+                ContextCompat.getColor(context, R.color.enemy), 2500, 1));
+
+        enemies.add(new Enemy( 1000, 500, 90, 100, 2000, ContextCompat.getColor(context, R.color.enemy), 2500, 1));
+
         setFocusable(true);
     }
 
@@ -144,7 +150,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick.update();
         cooldownBar.update();
         player.update();
+        enemiesToDelete.clear();
         for (Enemy enemy: enemies)
             enemy.update();
+        removeEnemies();
+    }
+
+    public static void removeEnemies(){
+        for (Enemy enemy: enemiesToDelete)
+            enemies.remove(enemy);
     }
 }
