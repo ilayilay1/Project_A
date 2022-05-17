@@ -85,7 +85,7 @@ public class Player extends Circle {
             return;
         }
         if (deltaT % 300 < 150)
-            paint.setColor(Color.WHITE);
+            paint.setAlpha(150);
         else
             paint.setColor(color);
 

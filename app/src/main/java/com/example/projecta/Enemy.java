@@ -60,7 +60,7 @@ public class Enemy extends Rectangle {
         }
         if(deltaT >= timeInMs + 800){
             isDeadly = false; // Makes the enemy no longer deadly
-            Game.enemiesToDelete.add(this);
+            Game.enemiesToDelete.add(this); // Adds to the enemy delete list!
         }
         if(!isAnimationActive)
             switch(attackStatus){
@@ -95,6 +95,7 @@ public class Enemy extends Rectangle {
 
     private void secondPhase() {
         isAnimationActive = true;
+        Game.flashScreen.activateFlashScreen(); // Flashes the screen
         paint.setAlpha(255);
         paint.setColor(Color.WHITE);
         Log.e("TAG", "Second Phase Running");

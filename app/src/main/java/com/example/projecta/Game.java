@@ -27,6 +27,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final CooldownBar cooldownBar;
     private final Joystick joystick;
     private final GameLoop gameLoop;
+    public static final FlashScreen flashScreen = new FlashScreen();
     public static ArrayList<Enemy> enemies = new ArrayList<>();
     public static  ArrayList<Enemy> enemiesToDelete = new ArrayList<>();
     private int firstFingerIndex;
@@ -48,7 +49,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         enemies.add(new Enemy( 1000, 500, 45, 100, 2000,
                 ContextCompat.getColor(context, R.color.enemy), 2500, 1));
 
-        enemies.add(new Enemy( 1000, 500, 90, 100, 2000, ContextCompat.getColor(context, R.color.enemy), 2500, 1));
+        enemies.add(new Enemy( 1000, 500, 90, 100, 2000, ContextCompat.getColor(context, R.color.enemy), 3000, 1));
+
+        enemies.add(new Enemy( 1000, 500, 120, 100, 2000, ContextCompat.getColor(context, R.color.enemy), 3500, 1));
+
+        enemies.add(new Enemy( 1000, 500, 160, 100, 2000, ContextCompat.getColor(context, R.color.enemy), 4000, 1));
+        enemies.add(new Enemy( 1000, 500, 200, 100, 2000, ContextCompat.getColor(context, R.color.enemy), 4000, 1));
 
         setFocusable(true);
     }
@@ -124,6 +130,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             enemy.draw(canvas);
         player.draw(canvas);
         cooldownBar.draw(canvas);
+        flashScreen.draw(canvas);
 
     }
 
@@ -154,9 +161,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         for (Enemy enemy: enemies)
             enemy.update();
         removeEnemies();
+
+        flashScreen.update();
     }
 
-    public static void removeEnemies(){
+    public static void removeEnemies(){ // Deletes enemies which were scheduled to be removed!
         for (Enemy enemy: enemiesToDelete)
             enemies.remove(enemy);
     }
