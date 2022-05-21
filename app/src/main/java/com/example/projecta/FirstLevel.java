@@ -24,8 +24,10 @@ public class FirstLevel {
         long currentTime = System.currentTimeMillis();
         if(currentTime - previousTime >= 855){
             previousTime = currentTime;
-            Game.enemies.add(new Enemy( 1000, rnd.nextInt(1000)+10, rnd.nextInt(179)+1, 100, 2500,
+            Game.enemiesRectangles.add(new EnemyRectangle( 1000, rnd.nextInt(1000)+10, rnd.nextInt(179)+1, 100, 2500,
                     ContextCompat.getColor(MainActivity.context, R.color.enemy), 2500, 1));
+            Game.enemiesCircles.add(new EnemyCircle( ContextCompat.getColor(MainActivity.context, R.color.enemy),
+                    rnd.nextInt(MainActivity.size.x), rnd.nextInt(MainActivity.size.y), 100, 2500, 1));
         }
     }
 

@@ -41,8 +41,17 @@ public class Collision {
 
     }
 
-    public static boolean circlesToCircle(Circle circle, Circle circle2){
-        return false;
+    public static boolean circleToCircle(Circle circle1, Circle circle2, boolean isDeadly){
+        if (!isDeadly) // If the attack isn't generated yet, cancel function
+            return false;
+
+        double deltaX = circle1.positionX - circle2.positionX;
+        double deltaY = circle1.positionY - circle2.positionY;
+        double distance = Math.sqrt(deltaX*deltaX - deltaY*deltaY);
+        if(distance < circle1.radius + circle2.radius)
+            return true;
+        else
+            return false;
     }
 
 }

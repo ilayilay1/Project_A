@@ -25,8 +25,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Joystick joystick;
     private final GameLoop gameLoop;
     public static final FlashScreen flashScreen = new FlashScreen();
-    public static final ArrayList<Enemy> enemies = new ArrayList<>();
-    public static  ArrayList<Enemy> enemiesToDelete = new ArrayList<>();
+    public static final ArrayList<EnemyRectangle> enemiesRectangles = new ArrayList<>();
+    public static  ArrayList<EnemyRectangle> enemiesToDeleteRectangles = new ArrayList<>();
+    public static final ArrayList<EnemyCircle> enemiesCircles = new ArrayList<>();
+    public static  ArrayList<EnemyCircle> enemiesToDeleteCircles = new ArrayList<>();
     private int firstFingerIndex;
     private FirstLevel firstLevel;
 
@@ -116,7 +118,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         drawFPS(canvas);
 
         joystick.draw(canvas);
-        for (Enemy enemy: enemies)
+        for (EnemyRectangle enemy: enemiesRectangles)
+            enemy.draw(canvas);
+        for (EnemyCircle enemy: enemiesCircles)
             enemy.draw(canvas);
         player.draw(canvas);
         cooldownBar.draw(canvas);
@@ -147,8 +151,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick.update();
         cooldownBar.update();
         player.update();
-        enemiesToDelete.clear();
-        for (Enemy enemy: enemies)
+        enemiesToDeleteRectangles.clear();
+        for (EnemyRectangle enemy: enemiesRectangles)
+            enemy.update();
+        for (EnemyCircle enemy: enemiesCircles)
             enemy.update();
         removeEnemies();
         flashScreen.update();
@@ -156,7 +162,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public static void removeEnemies(){ // Deletes enemies which were scheduled to be removed!
-        for (Enemy enemy: enemiesToDelete)
-            enemies.remove(enemy);
+        for (EnemyRectangle enemy: enemiesToDeleteRectangles)
+            enemiesRectangles.remove(enemy);
+
+        for (EnemyCircle enemy: enemiesToDeleteCircles)
+            enemiesCircles.remove(enemy);
     }
 }

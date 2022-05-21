@@ -3,77 +3,59 @@ package com.example.projecta;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.os.Handler;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
-/**
- * Enemy is the obstacle in the game, which the user needs to avoid at all costs.
- * The enemy class is an extension of a Rectangle, which is an extension of a GameObject
- */
-
-public class Enemy extends Rectangle {
-
+public class EnemyCircle extends Circle {
     private boolean isDeadly = false, isAnimationActive = false, runOnce = false;
     private float timeInMs;
     private int attackStyle, attackStatus;
     private final int ATTACK_FIRST_PHASE = 1, ATTACK_SECOND_PHASE = 2, ATTACK_THIRD_PHASE = 3;
-    private double staticWidth, staticHeight;
+    private double staticRadius;
     private long timeSincePhase;
-    //Handler handler = new Handler();
 
-    public Enemy(double positionX, double positionY, float degree, double width, double height, int color, float timeInMs, int attackStyle){
-        super(color, positionX, positionY, degree, width, height);
+    public EnemyCircle(int color, double positionX, double positionY, double radius, float timeInMs, int attackStyle) {
+        super(color, positionX, positionY, radius);
         paint.setAlpha(1);
         this.timeInMs = timeInMs;
         this.attackStyle = attackStyle;
-        staticWidth = width;
-        staticHeight = height;
+        staticRadius = radius;
         // activateAttack(attackStyle);
         attackStatus = ATTACK_FIRST_PHASE;
         timeSincePhase = System.currentTimeMillis();
-        //firstPhase();
-
     }
 
+    @Override
     public void update() {
         long deltaT = System.currentTimeMillis() - timeSincePhase;
 
         if (deltaT >= timeInMs && deltaT < timeInMs + 300) {
             attackStatus = ATTACK_SECOND_PHASE;
-            if(!runOnce)
+            if (!runOnce)
                 isAnimationActive = false;
             runOnce = true;
             isDeadly = true; // Makes the enemy actually deadly
         }
-        if(deltaT >= timeInMs + 300){
+        if (deltaT >= timeInMs + 300) {
             attackStatus = ATTACK_THIRD_PHASE;
-            if(runOnce)
+            if (runOnce)
                 isAnimationActive = false;
             runOnce = false;
         }
-        if(deltaT >= timeInMs + 800){
+        if (deltaT >= timeInMs + 800) {
             isDeadly = false; // Makes the enemy no longer deadly
-            Game.enemiesToDelete.add(this); // Adds to the enemy delete list!
+            Game.enemiesToDeleteCircles.add(this); // Adds to the enemy delete list!
         }
-        if(!isAnimationActive)
-            switch(attackStatus){
+        if (!isAnimationActive)
+            switch (attackStatus) {
                 case 1:
-                    //handler.post(() -> { firstPhase(); });
                     firstPhase();
                     break;
                 case 2:
-                    //handler.post(() -> { secondPhase(); });
                     secondPhase();
                     break;
                 case 3:
-                    //handler.post(() -> { thirdPhase(); });
                     thirdPhase();
                     break;
             }
@@ -82,10 +64,10 @@ public class Enemy extends Rectangle {
     private void thirdPhase() {
         isAnimationActive = true;
         ((Activity)MainActivity.context).runOnUiThread(() -> {
-            final ValueAnimator enemyRectangleAnimation = ValueAnimator.ofFloat((float) staticWidth, 0); // Y value animation
-            enemyRectangleAnimation.setDuration((long) 500);
-            enemyRectangleAnimation.addUpdateListener(valueAnimator -> width = Double.parseDouble(enemyRectangleAnimation.getAnimatedValue().toString()));
-            enemyRectangleAnimation.start();
+            final ValueAnimator enemyCircleAnimation = ValueAnimator.ofFloat((float) staticRadius, 0); // Y value animation
+            enemyCircleAnimation.setDuration((long) 500);
+            enemyCircleAnimation.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimation.getAnimatedValue().toString()));
+            enemyCircleAnimation.start();
 
             final ValueAnimator enemyColorAnimation = ValueAnimator.ofFloat(255, 0); // Y value animation
             enemyColorAnimation.setDuration((long) 500);
@@ -101,19 +83,14 @@ public class Enemy extends Rectangle {
         Game.flashScreen.activateFlashScreen(); // Flashes the screen
         paint.setAlpha(255);
         paint.setColor(Color.WHITE);
-       // Log.e("TAG", "Second Phase Running");
-        switch(attackStyle){
+        // Log.e("TAG", "Second Phase Running");
+        switch (attackStyle) {
             case 1:
-                ((Activity)MainActivity.context).runOnUiThread(() -> {
-                    final ValueAnimator enemyRectangleWidthAnimation = ValueAnimator.ofFloat(0, (float) staticWidth); // Y value animation
-                    enemyRectangleWidthAnimation.setDuration((long) 300);
-                    enemyRectangleWidthAnimation.addUpdateListener(valueAnimator -> width = Double.parseDouble(enemyRectangleWidthAnimation.getAnimatedValue().toString()));
-                    enemyRectangleWidthAnimation.start();
-
-                    final ValueAnimator enemyRectangleHeightAnimation = ValueAnimator.ofFloat(0, (float) staticHeight); // Y value animation
-                    enemyRectangleHeightAnimation.setDuration((long) 300);
-                    enemyRectangleHeightAnimation.addUpdateListener(valueAnimator -> height = Double.parseDouble(enemyRectangleHeightAnimation.getAnimatedValue().toString()));
-                    enemyRectangleHeightAnimation.start();
+                ((Activity) MainActivity.context).runOnUiThread(() -> {
+                    final ValueAnimator enemyCircleAnimation = ValueAnimator.ofFloat(0, (float) staticRadius); // Y value animation
+                    enemyCircleAnimation.setDuration((long) 300);
+                    enemyCircleAnimation.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimation.getAnimatedValue().toString()));
+                    enemyCircleAnimation.start();
 
                     final ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), paint.getColor(),
                             ContextCompat.getColor(MainActivity.context, R.color.enemy));
@@ -128,14 +105,14 @@ public class Enemy extends Rectangle {
 
     private void firstPhase() {
         isAnimationActive = true;
-       // Log.e("TAG", "First Phase Running");
-            switch(attackStyle){
+        // Log.e("TAG", "First Phase Running");
+        switch (attackStyle) {
             case 1:
-                ((Activity)MainActivity.context).runOnUiThread(() -> {
-                    final ValueAnimator enemyRectangleAnimation = ValueAnimator.ofFloat(0, (float) staticWidth);
-                    enemyRectangleAnimation.setDuration((long) timeInMs);
-                    enemyRectangleAnimation.addUpdateListener(valueAnimator -> width = Double.parseDouble(enemyRectangleAnimation.getAnimatedValue().toString()));
-                    enemyRectangleAnimation.start();
+                ((Activity) MainActivity.context).runOnUiThread(() -> {
+                    final ValueAnimator enemyCircleAnimation = ValueAnimator.ofFloat(0, (float) radius);
+                    enemyCircleAnimation.setDuration((long) timeInMs);
+                    enemyCircleAnimation.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimation.getAnimatedValue().toString()));
+                    enemyCircleAnimation.start();
 
                     final ValueAnimator enemyColorAnimation = ValueAnimator.ofFloat(1, 125);
                     enemyColorAnimation.setDuration((long) timeInMs);
@@ -147,7 +124,6 @@ public class Enemy extends Rectangle {
                 break;
         }
     }
-
     public boolean getDeadly() {
         return isDeadly;
     }

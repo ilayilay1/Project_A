@@ -59,9 +59,19 @@ public class Player extends Circle {
             positionY += velocityY;
 
         cooldownBar.trackPlayer(positionX, positionY); // Tracks the cooldown bar to the new Player location
-        synchronized (Game.enemies){
-            for (Enemy enemy : Game.enemies)
-                if (Collision.circleToRect(this, enemy, enemy.getDeadly()) && !this.getDamageStatus() && !invincible) {
+        synchronized (Game.enemiesRectangles){
+            for (EnemyRectangle enemy : Game.enemiesRectangles)
+                if ((Collision.circleToRect(this, enemy, enemy.getDeadly())) && !this.getDamageStatus() && !invincible) {
+                    isDamaged = true;
+                    invincible = true;
+                    lastDamageTaken = System.currentTimeMillis();
+                    hitSound.start(); // Plays damaged sound
+                    break;
+                }
+        }
+        synchronized (Game.enemiesCircles){
+            for (EnemyCircle enemy : Game.enemiesCircles)
+                if ((Collision.circleToCircle(this, enemy, enemy.getDeadly())) && !this.getDamageStatus() && !invincible) {
                     isDamaged = true;
                     invincible = true;
                     lastDamageTaken = System.currentTimeMillis();
