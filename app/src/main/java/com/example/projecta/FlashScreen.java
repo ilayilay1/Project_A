@@ -2,6 +2,8 @@ package com.example.projecta;
 
 import android.graphics.Color;
 
+import androidx.core.content.ContextCompat;
+
 /**
  * FlashScreen is an object created to "Flash" the screen once a powerful attack is unleashed in order to add immersion
  * The FlashScreen class is an extension of a Rectangle, which is an extension of a GameObject
@@ -28,6 +30,8 @@ public class FlashScreen extends Rectangle{
     }
 
     public void activateFlashScreen(){
+        paint.setColor(Color.WHITE);
+        paint.setAlpha(0);
         timeOfActivation = System.currentTimeMillis();
         flashActive = true;
     }

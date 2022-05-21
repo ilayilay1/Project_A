@@ -9,6 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="magenta">#FF09FF</color>
     <color name="player">#00BCD4</color>
-    <color name="enemy">#CF2A1E</color>
-    <color name="enemyTransparent">#F00E43</color>
+    <color name="damageTaken">#CF2A1E</color>
+    <color name="enemy">#F00E43</color>
 </resources>

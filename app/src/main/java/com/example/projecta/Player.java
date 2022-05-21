@@ -2,6 +2,7 @@ package com.example.projecta;
 
 import android.animation.ValueAnimator;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,6 +27,7 @@ public class Player extends Circle {
     Handler handler = new Handler();
     private long lastDamageTaken;
     private int color;
+    final MediaPlayer hitSound = MediaPlayer.create(MainActivity.context, R.raw.hit);
 
 
     public Player(CooldownBar cooldownBar, Joystick joystick, double positionX, double positionY, double radius, int color) {
@@ -57,14 +59,16 @@ public class Player extends Circle {
             positionY += velocityY;
 
         cooldownBar.trackPlayer(positionX, positionY); // Tracks the cooldown bar to the new Player location
-
-        for (Enemy enemy : Game.enemies)
-            if (Collision.circleToRect(this, enemy, enemy.getDeadly()) && !this.getDamageStatus() && !invincible) {
-                isDamaged = true;
-                invincible = true;
-                lastDamageTaken = System.currentTimeMillis();
-                break;
-            }
+        synchronized (Game.enemies){
+            for (Enemy enemy : Game.enemies)
+                if (Collision.circleToRect(this, enemy, enemy.getDeadly()) && !this.getDamageStatus() && !invincible) {
+                    isDamaged = true;
+                    invincible = true;
+                    lastDamageTaken = System.currentTimeMillis();
+                    hitSound.start(); // Plays damaged sound
+                    break;
+                }
+        }
         if (isDamaged) {
             damageAnimation();
         }
@@ -109,7 +113,7 @@ public class Player extends Circle {
                 number[0]++;
                 if (number[0] == 2 && !isDamaged)
                     invincible = false;
-                Log.e("TAG", "" + invincible);
+               // Log.e("TAG", "" + invincible);
             }
 
             @Override

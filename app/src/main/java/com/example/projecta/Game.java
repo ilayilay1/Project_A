@@ -5,17 +5,14 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Iterator;
 
 /**
  * Game Manages all objects in the game and is responsible for updating all states and
@@ -28,9 +25,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Joystick joystick;
     private final GameLoop gameLoop;
     public static final FlashScreen flashScreen = new FlashScreen();
-    public static ArrayList<Enemy> enemies = new ArrayList<>();
+    public static final ArrayList<Enemy> enemies = new ArrayList<>();
     public static  ArrayList<Enemy> enemiesToDelete = new ArrayList<>();
     private int firstFingerIndex;
+    private FirstLevel firstLevel;
 
 
     public Game(Context context) {
@@ -46,15 +44,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         cooldownBar = new CooldownBar(1000, 450, 0, 0, 10, ContextCompat.getColor(context, R.color.white)); //Width is temporarily 0 because the cooldown bar is a set length of 100
         player = new Player(cooldownBar ,joystick, 1000, 500, 30, ContextCompat.getColor(context, R.color.player));
 
-        enemies.add(new Enemy( 1000, 500, 45, 100, 2000,
-                ContextCompat.getColor(context, R.color.enemy), 2500, 1));
-
-        enemies.add(new Enemy( 1000, 500, 90, 100, 2000, ContextCompat.getColor(context, R.color.enemy), 3000, 1));
-
-        enemies.add(new Enemy( 1000, 500, 120, 100, 2000, ContextCompat.getColor(context, R.color.enemy), 3500, 1));
-
-        enemies.add(new Enemy( 1000, 500, 160, 100, 2000, ContextCompat.getColor(context, R.color.enemy), 4000, 1));
-        enemies.add(new Enemy( 1000, 500, 200, 100, 2000, ContextCompat.getColor(context, R.color.enemy), 4000, 1));
+        firstLevel = new FirstLevel();
 
         setFocusable(true);
     }
@@ -161,8 +151,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         for (Enemy enemy: enemies)
             enemy.update();
         removeEnemies();
-
         flashScreen.update();
+        firstLevel.update();
     }
 
     public static void removeEnemies(){ // Deletes enemies which were scheduled to be removed!
