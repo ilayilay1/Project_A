@@ -29,6 +29,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public static  ArrayList<EnemyRectangle> enemiesToDeleteRectangles = new ArrayList<>();
     public static final ArrayList<EnemyCircle> enemiesCircles = new ArrayList<>();
     public static  ArrayList<EnemyCircle> enemiesToDeleteCircles = new ArrayList<>();
+    public static final ArrayList<ArrowHead> arrowHeadList = new ArrayList<>();
+    public static  ArrayList<ArrowHead> arrowHeadToDelete = new ArrayList<>();
     private int firstFingerIndex;
     private FirstLevel firstLevel;
 
@@ -45,7 +47,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick = new Joystick(275, 700, 100, 40); // X and Y coordinates are irrelevant after v1.5
         cooldownBar = new CooldownBar(1000, 450, 0, 0, 10, ContextCompat.getColor(context, R.color.white)); //Width is temporarily 0 because the cooldown bar is a set length of 100
         player = new Player(cooldownBar ,joystick, 1000, 500, 30, ContextCompat.getColor(context, R.color.player));
-
         firstLevel = new FirstLevel();
 
         setFocusable(true);
@@ -122,6 +123,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             enemy.draw(canvas);
         for (EnemyCircle enemy: enemiesCircles)
             enemy.draw(canvas);
+        for (ArrowHead arrowHead: arrowHeadList)
+            arrowHead.draw(canvas);
         player.draw(canvas);
         cooldownBar.draw(canvas);
         flashScreen.draw(canvas);
@@ -151,6 +154,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick.update();
         cooldownBar.update();
         player.update();
+        for (ArrowHead arrowHead: arrowHeadList)
+            arrowHead.update();
         enemiesToDeleteRectangles.clear();
         for (EnemyRectangle enemy: enemiesRectangles)
             enemy.update();
@@ -167,5 +172,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         for (EnemyCircle enemy: enemiesToDeleteCircles)
             enemiesCircles.remove(enemy);
+
+        for (ArrowHead arrowHead: arrowHeadToDelete)
+            arrowHeadList.remove(arrowHead);
     }
 }

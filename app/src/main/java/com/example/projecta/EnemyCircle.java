@@ -7,6 +7,11 @@ import android.graphics.Color;
 
 import androidx.core.content.ContextCompat;
 
+/**
+ * EnemyCircle is the obstacle in the game, which the user needs to avoid at all costs.
+ * The enemy class is an extension of a Rectangle, which is an extension of a GameObject
+ */
+
 public class EnemyCircle extends Circle {
     private boolean isDeadly = false, isAnimationActive = false, runOnce = false;
     private float timeInMs;
@@ -21,7 +26,6 @@ public class EnemyCircle extends Circle {
         this.timeInMs = timeInMs;
         this.attackStyle = attackStyle;
         staticRadius = radius;
-        // activateAttack(attackStyle);
         attackStatus = ATTACK_FIRST_PHASE;
         timeSincePhase = System.currentTimeMillis();
     }
