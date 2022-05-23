@@ -4,6 +4,7 @@ import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.Color;
+import android.renderscript.Sampler;
 
 import androidx.core.content.ContextCompat;
 
@@ -19,6 +20,9 @@ public class EnemyCircle extends Circle {
     private final int ATTACK_FIRST_PHASE = 1, ATTACK_SECOND_PHASE = 2, ATTACK_THIRD_PHASE = 3;
     private double staticRadius;
     private long timeSincePhase;
+    ValueAnimator enemyCircleAnimationFirst, enemyColorAnimationFirst, enemyCircleAnimationSecond, colorAnimationSecond,
+            enemyCircleAnimationThird, enemyColorAnimationThird;
+    ValueAnimator[] valueAnimators;
 
     public EnemyCircle(int color, double positionX, double positionY, double radius, float timeInMs, int attackStyle) {
         super(color, positionX, positionY, radius);
@@ -27,12 +31,13 @@ public class EnemyCircle extends Circle {
         this.attackStyle = attackStyle;
         staticRadius = radius;
         attackStatus = ATTACK_FIRST_PHASE;
-        timeSincePhase = System.currentTimeMillis();
+        timeSincePhase = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp;
+        createAnimators();
     }
 
     @Override
     public void update() {
-        long deltaT = System.currentTimeMillis() - timeSincePhase;
+        long deltaT = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp - timeSincePhase;
 
         if (deltaT >= timeInMs && deltaT < timeInMs + 300) {
             attackStatus = ATTACK_SECOND_PHASE;
@@ -68,17 +73,9 @@ public class EnemyCircle extends Circle {
     private void thirdPhase() {
         isAnimationActive = true;
         ((Activity)GameActivity.context).runOnUiThread(() -> {
-            final ValueAnimator enemyCircleAnimation = ValueAnimator.ofFloat((float) staticRadius, 0); // Y value animation
-            enemyCircleAnimation.setDuration((long) 500);
-            enemyCircleAnimation.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimation.getAnimatedValue().toString()));
-            enemyCircleAnimation.start();
+            enemyCircleAnimationThird.start();
 
-            final ValueAnimator enemyColorAnimation = ValueAnimator.ofFloat(255, 0); // Y value animation
-            enemyColorAnimation.setDuration((long) 500);
-            enemyColorAnimation.addUpdateListener(valueAnimator -> {
-                paint.setAlpha((int) Double.parseDouble(enemyColorAnimation.getAnimatedValue().toString()));
-            });
-            enemyColorAnimation.start();
+            enemyColorAnimationThird.start();
         });
     }
 
@@ -91,16 +88,9 @@ public class EnemyCircle extends Circle {
         switch (attackStyle) {
             case 1:
                 ((Activity) GameActivity.context).runOnUiThread(() -> {
-                    final ValueAnimator enemyCircleAnimation = ValueAnimator.ofFloat(0, (float) staticRadius); // Y value animation
-                    enemyCircleAnimation.setDuration((long) 300);
-                    enemyCircleAnimation.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimation.getAnimatedValue().toString()));
-                    enemyCircleAnimation.start();
+                    enemyCircleAnimationSecond.start();
 
-                    final ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), paint.getColor(),
-                            ContextCompat.getColor(GameActivity.context, R.color.enemy));
-                    colorAnimation.setDuration(300); // milliseconds
-                    colorAnimation.addUpdateListener(animator -> paint.setColor((int) animator.getAnimatedValue()));
-                    colorAnimation.start();
+                    colorAnimationSecond.start();
                 });
                 break;
 
@@ -113,17 +103,9 @@ public class EnemyCircle extends Circle {
         switch (attackStyle) {
             case 1:
                 ((Activity) GameActivity.context).runOnUiThread(() -> {
-                    final ValueAnimator enemyCircleAnimation = ValueAnimator.ofFloat(0, (float) radius);
-                    enemyCircleAnimation.setDuration((long) timeInMs);
-                    enemyCircleAnimation.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimation.getAnimatedValue().toString()));
-                    enemyCircleAnimation.start();
+                    enemyCircleAnimationFirst.start();
 
-                    final ValueAnimator enemyColorAnimation = ValueAnimator.ofFloat(1, 125);
-                    enemyColorAnimation.setDuration((long) timeInMs);
-                    enemyColorAnimation.addUpdateListener(valueAnimator -> {
-                        paint.setAlpha((int) Double.parseDouble(enemyColorAnimation.getAnimatedValue().toString()));
-                    });
-                    enemyColorAnimation.start();
+                    enemyColorAnimationFirst.start();
                 });
                 break;
         }
@@ -131,4 +113,49 @@ public class EnemyCircle extends Circle {
     public boolean getDeadly() {
         return isDeadly;
     }
+
+    public void pause(){
+        for (ValueAnimator valueAnimator : valueAnimators) {
+            if (valueAnimator.isRunning())
+                valueAnimator.pause();
+        }
+    }
+
+    public void resume(){
+        for (ValueAnimator valueAnimator : valueAnimators) {
+            if (valueAnimator.isRunning())
+                valueAnimator.resume();
+        }
+    }
+
+    public void createAnimators(){
+        enemyColorAnimationThird = ValueAnimator.ofFloat(255, 0); // Y value animation
+        enemyColorAnimationThird.setDuration((long) 500);
+        enemyColorAnimationThird.addUpdateListener(valueAnimator -> paint.setAlpha((int) Double.parseDouble(enemyColorAnimationThird.getAnimatedValue().toString())));
+
+        enemyCircleAnimationThird = ValueAnimator.ofFloat((float) staticRadius, 0); // Y value animation
+        enemyCircleAnimationThird.setDuration((long) 500);
+        enemyCircleAnimationThird.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimationThird.getAnimatedValue().toString()));
+
+        colorAnimationSecond = ValueAnimator.ofObject(new ArgbEvaluator(), paint.getColor(),
+                ContextCompat.getColor(GameActivity.context, R.color.enemy));
+        colorAnimationSecond.setDuration(300); // milliseconds
+        colorAnimationSecond.addUpdateListener(animator -> paint.setColor((int) animator.getAnimatedValue()));
+
+        enemyCircleAnimationSecond = ValueAnimator.ofFloat(0, (float) staticRadius); // Y value animation
+        enemyCircleAnimationSecond.setDuration((long) 300);
+        enemyCircleAnimationSecond.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimationSecond.getAnimatedValue().toString()));
+
+        enemyCircleAnimationFirst = ValueAnimator.ofFloat(0, (float) radius);
+        enemyCircleAnimationFirst.setDuration((long) timeInMs);
+        enemyCircleAnimationFirst.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimationFirst.getAnimatedValue().toString()));
+
+        enemyColorAnimationFirst = ValueAnimator.ofFloat(1, 125);
+        enemyColorAnimationFirst.setDuration((long) timeInMs);
+        enemyColorAnimationFirst.addUpdateListener(valueAnimator -> paint.setAlpha((int) Double.parseDouble(enemyColorAnimationFirst.getAnimatedValue().toString())));
+
+        valueAnimators = new ValueAnimator[] {enemyCircleAnimationFirst, enemyColorAnimationFirst, enemyCircleAnimationSecond, colorAnimationSecond,
+                enemyCircleAnimationThird, enemyColorAnimationThird};
+    }
+
 }

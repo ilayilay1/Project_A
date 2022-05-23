@@ -9,9 +9,14 @@ import android.graphics.Color;
  */
 
 public class CooldownBar extends Rectangle {
+    ValueAnimator barAnimation;
 
     public CooldownBar(double positionX, double positionY, float degree, double width, double height, int color){
         super(color, positionX, positionY, degree, width, height);
+
+        barAnimation = ValueAnimator.ofFloat(100, 0); // X value animation
+        barAnimation.setDuration(1500);
+        barAnimation.addUpdateListener(valueAnimator -> this.width = Double.parseDouble(barAnimation.getAnimatedValue().toString()));
     }
 
     public void update() {
@@ -24,10 +29,15 @@ public class CooldownBar extends Rectangle {
     }
 
     public void startCountdown(){
-        final ValueAnimator barAnimation = ValueAnimator.ofFloat(100, 0); // X value animation
-        barAnimation.setDuration(1500);
-        barAnimation.addUpdateListener(valueAnimator -> width = Double.parseDouble(barAnimation.getAnimatedValue().toString()));
         barAnimation.start();
+    }
+    public void pause(){
+        if(barAnimation.isRunning())
+            barAnimation.pause();
+    }
+    public void resume(){
+        if(barAnimation.isRunning())
+            barAnimation.resume();
     }
 
 }

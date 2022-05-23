@@ -24,7 +24,7 @@ public class ArrowHead extends GameObject{
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setAlpha(0);
         staticDirection = direction;
-        timeOfCreation = System.currentTimeMillis();
+        timeOfCreation = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp;
     }
 
     @Override
@@ -105,7 +105,7 @@ public class ArrowHead extends GameObject{
                 paint.setAlpha(0);
                 break;
         }
-        double deltaT = System.currentTimeMillis() - timeOfCreation;
+        double deltaT = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp - timeOfCreation;
         if (deltaT > timeInMs) { // Removes arrow after the enemy finally spawns
             Game.arrowHeadToDelete.add(this);
             return;

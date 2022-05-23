@@ -20,7 +20,7 @@ public class FlashScreen extends Rectangle{
 
     @Override
     public void update() {
-        long deltaT = System.currentTimeMillis() - timeOfActivation;
+        long deltaT = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp - timeOfActivation;
         if(deltaT > 40 && flashActive){
             flashActive = false;
             paint.setAlpha(0);
@@ -32,7 +32,7 @@ public class FlashScreen extends Rectangle{
     public void activateFlashScreen(){
         paint.setColor(Color.WHITE);
         paint.setAlpha(0);
-        timeOfActivation = System.currentTimeMillis();
+        timeOfActivation = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp;
         flashActive = true;
     }
 }

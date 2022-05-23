@@ -1,6 +1,7 @@
 package com.example.projecta;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
@@ -23,7 +24,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Player player;
     private final CooldownBar cooldownBar;
     private final Joystick joystick;
-    private GameLoop gameLoop;
+    public GameLoop gameLoop;
     public static final FlashScreen flashScreen = new FlashScreen();
     public static final ArrayList<EnemyRectangle> enemiesRectangles = new ArrayList<>();
     public static  ArrayList<EnemyRectangle> enemiesToDeleteRectangles = new ArrayList<>();
@@ -103,6 +104,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             gameLoop = new GameLoop(this, surfaceHolder);
         }
         gameLoop.startLoop();
+        SharedPreferences sp = GameActivity.context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
+        gameLoop.timeInApp = Double.longBitsToDouble(sp.getLong("timeInApplication", 0));
+        firstLevel.levelMusic.start();
+        cooldownBar.resume();
+        player.resume();
+        for (EnemyRectangle enemy: enemiesRectangles)
+            enemy.resume();
+        for (EnemyCircle enemy: enemiesCircles)
+            enemy.resume();
     }
 
     @Override
@@ -167,6 +177,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         removeEnemies();
         flashScreen.update();
         firstLevel.update();
+
+        Log.e("TAG", "" + gameLoop.timeInApp);
     }
 
     public static void removeEnemies(){ // Deletes enemies which were scheduled to be removed!
@@ -182,5 +194,22 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     public void pause() {
         gameLoop.stopLoop();
+
+        SharedPreferences sp = GameActivity.context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong("timeInApplication", Double.doubleToRawLongBits(gameLoop.timeInApp));
+        editor.commit();
+
+        firstLevel.levelMusic.pause();
+        cooldownBar.pause();
+        player.pause();
+        for (EnemyRectangle enemy: enemiesRectangles)
+            enemy.pause();
+        for (EnemyCircle enemy: enemiesCircles)
+            enemy.pause();
+    }
+
+    public double getTimeInApplication(){
+        return gameLoop.timeInApp;
     }
 }

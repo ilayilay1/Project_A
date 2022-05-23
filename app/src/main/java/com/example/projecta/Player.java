@@ -25,9 +25,11 @@ public class Player extends Circle {
     private final CooldownBar cooldownBar;
     private boolean dashCooldown = false, invincible = false, isDamaged = false; //No cooldown for dash and player isn't immune
     Handler handler = new Handler();
-    private long lastDamageTaken;
-    private int color;
+    private long lastDamageTaken, lastDashTime;
+    private int color, hitPoints = 3;
     final MediaPlayer hitSound = MediaPlayer.create(GameActivity.context, R.raw.hit);
+    ValueAnimator positionXAnimation, positionYAnimation, radiusAnimationSmall, radiusAnimationBig;
+    ValueAnimator[] valueAnimators;
 
 
     public Player(CooldownBar cooldownBar, Joystick joystick, double positionX, double positionY, double radius, int color) {
@@ -35,6 +37,7 @@ public class Player extends Circle {
         this.joystick = joystick;
         this.cooldownBar = cooldownBar;
         this.color = color;
+        createAnimators();
     }
 
 
@@ -64,8 +67,9 @@ public class Player extends Circle {
                 if ((Collision.circleToRect(this, enemy, enemy.getDeadly())) && !this.getDamageStatus() && !invincible) {
                     isDamaged = true;
                     invincible = true;
-                    lastDamageTaken = System.currentTimeMillis();
+                    lastDamageTaken = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp;
                     hitSound.start(); // Plays damaged sound
+                    hitPoints--; // Removes health point for taking damage
                     break;
                 }
         }
@@ -74,14 +78,23 @@ public class Player extends Circle {
                 if ((Collision.circleToCircle(this, enemy, enemy.getDeadly())) && !this.getDamageStatus() && !invincible) {
                     isDamaged = true;
                     invincible = true;
-                    lastDamageTaken = System.currentTimeMillis();
+                    lastDamageTaken = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp;
                     hitSound.start(); // Plays damaged sound
+                    hitPoints--; // Removes health point for taking damage
                     break;
                 }
         }
         if (isDamaged) {
             damageAnimation();
         }
+        if(lastDashTime + 300 <= (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp && !isDamaged)
+            invincible = false;
+        if(lastDashTime + 1500 <= (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp)
+            dashCooldown = false;
+        if(hitPoints == 0){ // Game over condition
+            //((GameActivity)GameActivity.context).game.pause();
+        }
+
     }
 
     public void setPosition(double positionX, double positionY) { // Irrelevant for now, was used for testing, might use in future for extra features
@@ -91,7 +104,7 @@ public class Player extends Circle {
 
     public void damageAnimation() { // Activates in a scenario where the player gets hit by something resulting in life lost and damage taken
 
-        long deltaT = System.currentTimeMillis() - lastDamageTaken;
+        long deltaT = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp - lastDamageTaken;
         if (deltaT > 2500) {
             invincible = false;
             isDamaged = false;
@@ -113,25 +126,8 @@ public class Player extends Circle {
         invincible = true;
         cooldownBar.startCountdown(); // Start cooldown bar countdown
 
-        final int[] number = {0};
-        final long[] mTimeLeftInMillis = {1500};
-        CountDownTimer mCountDownTimer = new CountDownTimer(mTimeLeftInMillis[0], 300) {
-            // Timer's functionality is after 1.5 seconds the cooldown wears off and after 0.3 seconds the player is no longer invincible
-            @Override
-            public void onTick(long millisUntilFinished) {
-                mTimeLeftInMillis[0] = millisUntilFinished;
-                number[0]++;
-                if (number[0] == 2 && !isDamaged)
-                    invincible = false;
-               // Log.e("TAG", "" + invincible);
-            }
-
-            @Override
-            public void onFinish() {
-                dashCooldown = false;
-                number[0] = 0;
-            }
-        }.start();
+        // Timer's functionality is after 1.5 seconds the cooldown wears off and after 0.3 seconds the player is no longer invincible
+        lastDashTime = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp;
 
         velocityX = joystick.getActuatorX(); // Sets distance of the vector to a set distance
         velocityY = joystick.getActuatorY();
@@ -155,24 +151,24 @@ public class Player extends Circle {
         else
             targetPositionY += velocityY;
 
-        final ValueAnimator positionXAnimation = ValueAnimator.ofFloat((float) positionX, (float) targetPositionX); // X value animation
+        positionXAnimation = ValueAnimator.ofFloat((float) positionX, (float) targetPositionX); // X value animation
         positionXAnimation.setDuration(300);
         positionXAnimation.addUpdateListener(valueAnimator -> positionX = Double.parseDouble(positionXAnimation.getAnimatedValue().toString()));
         positionXAnimation.start();
 
-        final ValueAnimator positionYAnimation = ValueAnimator.ofFloat((float) positionY, (float) targetPositionY); // Y value animation
+        positionYAnimation = ValueAnimator.ofFloat((float) positionY, (float) targetPositionY); // Y value animation
         positionYAnimation.setDuration(300);
         positionYAnimation.addUpdateListener(valueAnimator -> positionY = Double.parseDouble(positionYAnimation.getAnimatedValue().toString()));
         positionYAnimation.start();
 
         double radiusBackup = radius; //Ensures our real radius doesn't get lost in the process!
-        final ValueAnimator radiusAnimationSmall = ValueAnimator.ofFloat((float) radius, (float) radius / 2); // Player gets small animation NOTE
+        radiusAnimationSmall = ValueAnimator.ofFloat((float) radius, (float) radius / 2); // Player gets small animation NOTE
         radiusAnimationSmall.setDuration(150);
         radiusAnimationSmall.addUpdateListener(valueAnimator -> radius = Double.parseDouble(radiusAnimationSmall.getAnimatedValue().toString()));
         radiusAnimationSmall.start();
 
         handler.postDelayed(() -> {
-            final ValueAnimator radiusAnimationBig = ValueAnimator.ofFloat((float) radius, (float) radiusBackup); // Player grows back animation
+            radiusAnimationBig = ValueAnimator.ofFloat((float) radius, (float) radiusBackup); // Player grows back animation
             radiusAnimationBig.setDuration(150);
             radiusAnimationBig.addUpdateListener(valueAnimator -> radius = Double.parseDouble(radiusAnimationBig.getAnimatedValue().toString()));
             radiusAnimationBig.start();
@@ -185,5 +181,39 @@ public class Player extends Circle {
 
     public boolean getDamageStatus() {
         return isDamaged;
+    }
+
+    public void pause(){
+        for (ValueAnimator valueAnimator : valueAnimators) {
+            if (valueAnimator.isRunning())
+                valueAnimator.pause();
+        }
+    }
+
+    public void resume(){
+        for (ValueAnimator valueAnimator : valueAnimators) {
+            if (valueAnimator.isRunning())
+                valueAnimator.resume();
+        }
+    }
+
+    public void createAnimators(){ // This method is kinda goofy but it's only to ensure the animator isn't null
+        positionXAnimation = ValueAnimator.ofFloat((float) positionX, (float) 0); // X value animation
+        positionXAnimation.setDuration(300);
+        positionXAnimation.addUpdateListener(valueAnimator -> positionX = Double.parseDouble(positionXAnimation.getAnimatedValue().toString()));
+
+        positionYAnimation = ValueAnimator.ofFloat((float) positionY, (float) 0); // Y value animation
+        positionYAnimation.setDuration(300);
+        positionYAnimation.addUpdateListener(valueAnimator -> positionY = Double.parseDouble(positionYAnimation.getAnimatedValue().toString()));
+
+        radiusAnimationSmall = ValueAnimator.ofFloat((float) radius, (float) radius / 2); // Player gets small animation NOTE
+        radiusAnimationSmall.setDuration(150);
+        radiusAnimationSmall.addUpdateListener(valueAnimator -> radius = Double.parseDouble(radiusAnimationSmall.getAnimatedValue().toString()));
+
+        radiusAnimationBig = ValueAnimator.ofFloat((float) radius, (float) 0); // Player grows back animation
+        radiusAnimationBig.setDuration(150);
+        radiusAnimationBig.addUpdateListener(valueAnimator -> radius = Double.parseDouble(radiusAnimationBig.getAnimatedValue().toString()));
+
+        valueAnimators = new ValueAnimator[]{positionXAnimation, positionYAnimation, radiusAnimationSmall, radiusAnimationBig};
     }
 }

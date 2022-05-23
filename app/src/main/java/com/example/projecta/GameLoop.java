@@ -13,6 +13,7 @@ public class GameLoop extends  Thread{
     private double averageFPS;
     public static final double MAX_UPS = 60.0; // CHECK THE UPS TARGET OFTEN ILAY!!!!
     private static final double UPS_PERIOD = 1E+3/MAX_UPS;
+    double timeInApp;
 
     public GameLoop(Game game, SurfaceHolder surfaceHolder) {
         this.surfaceHolder = surfaceHolder;
@@ -56,6 +57,7 @@ public class GameLoop extends  Thread{
                 synchronized (surfaceHolder) {
                     game.update();
                     updateCount++;
+                    timeInApp += UPS_PERIOD; // Tells us how much time was spent in the app
 
                     game.draw(canvas);
                 }
@@ -90,6 +92,7 @@ public class GameLoop extends  Thread{
                 updateCount++;
                 elapsedTime = System.currentTimeMillis() - startTime;
                 sleepTime = (long)(updateCount * UPS_PERIOD - elapsedTime);
+                timeInApp += UPS_PERIOD; // Tells us how much time was spent in the app
             }
 
             // Calculate average UPS and FPS

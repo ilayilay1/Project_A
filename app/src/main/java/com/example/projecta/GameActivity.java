@@ -13,7 +13,7 @@ public class GameActivity extends AppCompatActivity {
 
     public static Point size;
     public static Context context;
-    private Game game;
+    public Game game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

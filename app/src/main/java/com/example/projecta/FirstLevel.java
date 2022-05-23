@@ -17,11 +17,11 @@ public class FirstLevel {
     public FirstLevel(){
         levelMusic = MediaPlayer.create(GameActivity.context, R.raw.level1);
         levelMusic.setLooping(true);
-        levelMusic.start();
+        //levelMusic.start(); Song should start in pause/resume functions
     }
 
     public void update() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp;
         if(currentTime - previousTime >= 8550){
             previousTime = currentTime;
             Game.enemiesRectangles.add(new EnemyRectangle( 0, 0, 0, 100, 2500,
