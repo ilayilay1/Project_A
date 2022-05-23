@@ -14,7 +14,7 @@ public class FlashScreen extends Rectangle{
     private boolean flashActive = false;
 
     public FlashScreen() {
-        super(Color.WHITE, MainActivity.size.x/2, MainActivity.size.y/2, 0, MainActivity.size.x, MainActivity.size.y);
+        super(Color.WHITE, GameActivity.size.x/2, GameActivity.size.y/2, 0, GameActivity.size.x, GameActivity.size.y);
         paint.setAlpha(0);
     }
 

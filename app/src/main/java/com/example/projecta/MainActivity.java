@@ -4,25 +4,28 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
 public class MainActivity extends Activity {
 
     // Entry point for our Application
-    public static Point size;
-    public static Context context;
+    Button startButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Display display = getWindowManager().getDefaultDisplay(); //Get Dimensions
-        size = new Point();
-        display.getSize(size);
-        context = this;
-        setContentView(new Game(this)); //Enter the game Class :)
+        setContentView(R.layout.activity_main); //Enter the game Class :)
+
+        startButton = findViewById(R.id.buttonStart);
+        startButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this, GameActivity.class);
+            startActivity(intent);
+        });
     }
 }

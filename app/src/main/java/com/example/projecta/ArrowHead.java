@@ -82,23 +82,23 @@ public class ArrowHead extends GameObject{
 
         switch(direction){
             case 1:
-                positionX = MainActivity.size.x/2;
+                positionX = GameActivity.size.x/2;
                 positionY = 20;
                 paint.setAlpha(255);
                 break;
             case 2:
-                positionX = MainActivity.size.x/2;
-                positionY = MainActivity.size.y - 20;
+                positionX = GameActivity.size.x/2;
+                positionY = GameActivity.size.y - 20;
                 paint.setAlpha(255);
                 break;
             case 3:
                 positionX = 20;
-                positionY = MainActivity.size.y/2;
+                positionY = GameActivity.size.y/2;
                 paint.setAlpha(255);
                 break;
             case 4:
-                positionX = MainActivity.size.x - 20;
-                positionY = MainActivity.size.y/2;
+                positionX = GameActivity.size.x - 20;
+                positionY = GameActivity.size.y/2;
                 paint.setAlpha(255);
                 break;
             default:

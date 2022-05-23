@@ -15,7 +15,7 @@ public class FirstLevel {
     private long previousTime = 0;
 
     public FirstLevel(){
-        levelMusic = MediaPlayer.create(MainActivity.context, R.raw.level1);
+        levelMusic = MediaPlayer.create(GameActivity.context, R.raw.level1);
         levelMusic.setLooping(true);
         levelMusic.start();
     }
@@ -25,9 +25,9 @@ public class FirstLevel {
         if(currentTime - previousTime >= 8550){
             previousTime = currentTime;
             Game.enemiesRectangles.add(new EnemyRectangle( 0, 0, 0, 100, 2500,
-                    ContextCompat.getColor(MainActivity.context, R.color.enemy), 2500, 5));
+                    ContextCompat.getColor(GameActivity.context, R.color.enemy), 2500, 5));
             Game.enemiesRectangles.add(new EnemyRectangle( 0, 0, 0, 100, 2500,
-                    ContextCompat.getColor(MainActivity.context, R.color.enemy), 2500, 4)); /*
+                    ContextCompat.getColor(GameActivity.context, R.color.enemy), 2500, 4)); /*
             Game.enemiesRectangles.add(new EnemyRectangle( 1000, rnd.nextInt(1000)+10, rnd.nextInt(179)+1, 100, 2500,
                     ContextCompat.getColor(MainActivity.context, R.color.enemy), 2500, 1));
             Game.enemiesCircles.add(new EnemyCircle( ContextCompat.getColor(MainActivity.context, R.color.enemy),

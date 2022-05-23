@@ -81,7 +81,7 @@ public class EnemyRectangle extends Rectangle {
         isAnimationActive = true;
         switch(attackStyle) {
             case 1:
-                ((Activity)MainActivity.context).runOnUiThread(() -> {
+                ((Activity)GameActivity.context).runOnUiThread(() -> {
                     final ValueAnimator enemyRectangleAnimation = ValueAnimator.ofFloat((float) staticWidth, 0); // Y value animation
                     enemyRectangleAnimation.setDuration((long) 500);
                     enemyRectangleAnimation.addUpdateListener(valueAnimator -> width = Double.parseDouble(enemyRectangleAnimation.getAnimatedValue().toString()));
@@ -110,32 +110,32 @@ public class EnemyRectangle extends Rectangle {
        // Log.e("TAG", "Second Phase Running");
         switch(attackStyle){
             case 2:
-                ((Activity)MainActivity.context).runOnUiThread(() -> {
-                    final ValueAnimator enemyRectangleWidthAnimation = ValueAnimator.ofFloat(100, (float)(MainActivity.size.y + staticWidth/2)); // Y value animation
+                ((Activity)GameActivity.context).runOnUiThread(() -> {
+                    final ValueAnimator enemyRectangleWidthAnimation = ValueAnimator.ofFloat(100, (float)(GameActivity.size.y + staticWidth/2)); // Y value animation
                     enemyRectangleWidthAnimation.setDuration((long) timeInMsExtra);
                     enemyRectangleWidthAnimation.addUpdateListener(valueAnimator -> positionY = Double.parseDouble(enemyRectangleWidthAnimation.getAnimatedValue().toString()));
                     enemyRectangleWidthAnimation.start();
                 });
                 break;
             case 3:
-                ((Activity)MainActivity.context).runOnUiThread(() -> {
-                    final ValueAnimator enemyRectangleWidthAnimation = ValueAnimator.ofFloat((float)MainActivity.size.y - 100, (float)(0 - staticWidth/2)); // Y value animation
+                ((Activity)GameActivity.context).runOnUiThread(() -> {
+                    final ValueAnimator enemyRectangleWidthAnimation = ValueAnimator.ofFloat((float)GameActivity.size.y - 100, (float)(0 - staticWidth/2)); // Y value animation
                     enemyRectangleWidthAnimation.setDuration((long) timeInMsExtra);
                     enemyRectangleWidthAnimation.addUpdateListener(valueAnimator -> positionY = Double.parseDouble(enemyRectangleWidthAnimation.getAnimatedValue().toString()));
                     enemyRectangleWidthAnimation.start();
                 });
                 break;
             case 4:
-                ((Activity)MainActivity.context).runOnUiThread(() -> {
-                    final ValueAnimator enemyRectangleWidthAnimation = ValueAnimator.ofFloat((float)(staticWidth/2), (float)(MainActivity.size.x + staticWidth/2)); // Y value animation
+                ((Activity)GameActivity.context).runOnUiThread(() -> {
+                    final ValueAnimator enemyRectangleWidthAnimation = ValueAnimator.ofFloat((float)(staticWidth/2), (float)(GameActivity.size.x + staticWidth/2)); // Y value animation
                     enemyRectangleWidthAnimation.setDuration((long) timeInMsExtra);
                     enemyRectangleWidthAnimation.addUpdateListener(valueAnimator -> positionX = Double.parseDouble(enemyRectangleWidthAnimation.getAnimatedValue().toString()));
                     enemyRectangleWidthAnimation.start();
                 });
                 break;
             case 5:
-                ((Activity)MainActivity.context).runOnUiThread(() -> {
-                    final ValueAnimator enemyRectangleWidthAnimation = ValueAnimator.ofFloat((float)(MainActivity.size.x - staticWidth/2), (float)(-staticWidth/2)); // Y value animation
+                ((Activity)GameActivity.context).runOnUiThread(() -> {
+                    final ValueAnimator enemyRectangleWidthAnimation = ValueAnimator.ofFloat((float)(GameActivity.size.x - staticWidth/2), (float)(-staticWidth/2)); // Y value animation
                     enemyRectangleWidthAnimation.setDuration((long) timeInMsExtra);
                     enemyRectangleWidthAnimation.addUpdateListener(valueAnimator -> positionX = Double.parseDouble(enemyRectangleWidthAnimation.getAnimatedValue().toString()));
                     enemyRectangleWidthAnimation.start();
@@ -143,7 +143,7 @@ public class EnemyRectangle extends Rectangle {
                 break;
 
         }
-        ((Activity)MainActivity.context).runOnUiThread(() -> {
+        ((Activity)GameActivity.context).runOnUiThread(() -> {
             final ValueAnimator enemyRectangleWidthAnimation = ValueAnimator.ofFloat(0, (float) staticWidth); // Y value animation
             enemyRectangleWidthAnimation.setDuration((long) 300);
             enemyRectangleWidthAnimation.addUpdateListener(valueAnimator -> width = Double.parseDouble(enemyRectangleWidthAnimation.getAnimatedValue().toString()));
@@ -155,7 +155,7 @@ public class EnemyRectangle extends Rectangle {
             enemyRectangleHeightAnimation.start();
 
             final ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), paint.getColor(),
-                    ContextCompat.getColor(MainActivity.context, R.color.enemy));
+                    ContextCompat.getColor(GameActivity.context, R.color.enemy));
             colorAnimation.setDuration(300); // milliseconds
             colorAnimation.addUpdateListener(animator -> paint.setColor((int) animator.getAnimatedValue()));
             colorAnimation.start();
@@ -167,33 +167,33 @@ public class EnemyRectangle extends Rectangle {
        // Log.e("TAG", "First Phase Running");
             switch(attackStyle){
                 case 2:
-                    Game.arrowHeadList.add(new ArrowHead(0,0, ContextCompat.getColor(MainActivity.context, R.color.enemy), 1, timeInMs));
-                    positionX = MainActivity.size.x/2;
+                    Game.arrowHeadList.add(new ArrowHead(0,0, ContextCompat.getColor(GameActivity.context, R.color.enemy), 1, timeInMs));
+                    positionX = GameActivity.size.x/2;
                     positionY = staticWidth/2;
                     break;
                 case 3:
-                    Game.arrowHeadList.add(new ArrowHead(0,0, ContextCompat.getColor(MainActivity.context, R.color.enemy), 2, timeInMs));
-                    positionX = MainActivity.size.x/2;
-                    positionY = MainActivity.size.y-staticWidth/2;
+                    Game.arrowHeadList.add(new ArrowHead(0,0, ContextCompat.getColor(GameActivity.context, R.color.enemy), 2, timeInMs));
+                    positionX = GameActivity.size.x/2;
+                    positionY = GameActivity.size.y-staticWidth/2;
                     break;
                 case 4:
-                    Game.arrowHeadList.add(new ArrowHead(0,0, ContextCompat.getColor(MainActivity.context, R.color.enemy), 3, timeInMs));
+                    Game.arrowHeadList.add(new ArrowHead(0,0, ContextCompat.getColor(GameActivity.context, R.color.enemy), 3, timeInMs));
                     positionX = staticWidth/2;
-                    positionY = MainActivity.size.y/2;
+                    positionY = GameActivity.size.y/2;
                     break;
                 case 5:
-                    Game.arrowHeadList.add(new ArrowHead(0,0, ContextCompat.getColor(MainActivity.context, R.color.enemy), 4, timeInMs));
-                    positionX = MainActivity.size.x - staticWidth/2;
-                    positionY = MainActivity.size.y/2;
+                    Game.arrowHeadList.add(new ArrowHead(0,0, ContextCompat.getColor(GameActivity.context, R.color.enemy), 4, timeInMs));
+                    positionX = GameActivity.size.x - staticWidth/2;
+                    positionY = GameActivity.size.y/2;
                     break;
             }
-        ((Activity)MainActivity.context).runOnUiThread(() -> {
+        ((Activity)GameActivity.context).runOnUiThread(() -> {
             final ValueAnimator enemyRectangleAnimation = ValueAnimator.ofFloat(0, (float) staticWidth);
             enemyRectangleAnimation.setDuration((long) timeInMs);
             enemyRectangleAnimation.addUpdateListener(valueAnimator -> width = Double.parseDouble(enemyRectangleAnimation.getAnimatedValue().toString()));
             enemyRectangleAnimation.start();
         });
-        ((Activity)MainActivity.context).runOnUiThread(() -> {
+        ((Activity)GameActivity.context).runOnUiThread(() -> {
             final ValueAnimator enemyColorAnimation = ValueAnimator.ofFloat(1, 125);
             enemyColorAnimation.setDuration((long) timeInMs);
             enemyColorAnimation.addUpdateListener(valueAnimator -> {

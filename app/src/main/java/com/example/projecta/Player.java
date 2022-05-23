@@ -27,7 +27,7 @@ public class Player extends Circle {
     Handler handler = new Handler();
     private long lastDamageTaken;
     private int color;
-    final MediaPlayer hitSound = MediaPlayer.create(MainActivity.context, R.raw.hit);
+    final MediaPlayer hitSound = MediaPlayer.create(GameActivity.context, R.raw.hit);
 
 
     public Player(CooldownBar cooldownBar, Joystick joystick, double positionX, double positionY, double radius, int color) {
@@ -44,15 +44,15 @@ public class Player extends Circle {
         velocityY = joystick.getActuatorY() * MAX_SPEED;  // Keep in mind height and width are reversed here & try to get this to work
 
         // Update position
-        if (MainActivity.size.x - radius <= positionX + velocityX) // Calculating the X boundaries
-            positionX = MainActivity.size.x - radius;
+        if (GameActivity.size.x - radius <= positionX + velocityX) // Calculating the X boundaries
+            positionX = GameActivity.size.x - radius;
         else if (0 + radius >= positionX + velocityX)
             positionX = 0 + radius;
         else
             positionX += velocityX;
 
-        if (MainActivity.size.y - radius <= positionY + velocityY) // Calculating the Y boundaries
-            positionY = MainActivity.size.y - radius;
+        if (GameActivity.size.y - radius <= positionY + velocityY) // Calculating the Y boundaries
+            positionY = GameActivity.size.y - radius;
         else if (0 + radius >= positionY + velocityY)
             positionY = 0 + radius;
         else
@@ -141,15 +141,15 @@ public class Player extends Circle {
         double targetPositionX = positionX, targetPositionY = positionY;
 
         // Copy pasting from the update method
-        if (MainActivity.size.x - radius <= positionX + velocityX) // Calculating the X boundaries
-            targetPositionX = MainActivity.size.x - radius;
+        if (GameActivity.size.x - radius <= positionX + velocityX) // Calculating the X boundaries
+            targetPositionX = GameActivity.size.x - radius;
         else if (0 + radius >= positionX + velocityX)
             targetPositionX = 0 + radius;
         else
             targetPositionX += velocityX;
 
-        if (MainActivity.size.y - radius <= positionY + velocityY) // Calculating the Y boundaries
-            targetPositionY = MainActivity.size.y - radius;
+        if (GameActivity.size.y - radius <= positionY + velocityY) // Calculating the Y boundaries
+            targetPositionY = GameActivity.size.y - radius;
         else if (0 + radius >= positionY + velocityY)
             targetPositionY = 0 + radius;
         else

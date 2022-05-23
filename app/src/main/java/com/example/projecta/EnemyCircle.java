@@ -67,7 +67,7 @@ public class EnemyCircle extends Circle {
 
     private void thirdPhase() {
         isAnimationActive = true;
-        ((Activity)MainActivity.context).runOnUiThread(() -> {
+        ((Activity)GameActivity.context).runOnUiThread(() -> {
             final ValueAnimator enemyCircleAnimation = ValueAnimator.ofFloat((float) staticRadius, 0); // Y value animation
             enemyCircleAnimation.setDuration((long) 500);
             enemyCircleAnimation.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimation.getAnimatedValue().toString()));
@@ -90,14 +90,14 @@ public class EnemyCircle extends Circle {
         // Log.e("TAG", "Second Phase Running");
         switch (attackStyle) {
             case 1:
-                ((Activity) MainActivity.context).runOnUiThread(() -> {
+                ((Activity) GameActivity.context).runOnUiThread(() -> {
                     final ValueAnimator enemyCircleAnimation = ValueAnimator.ofFloat(0, (float) staticRadius); // Y value animation
                     enemyCircleAnimation.setDuration((long) 300);
                     enemyCircleAnimation.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimation.getAnimatedValue().toString()));
                     enemyCircleAnimation.start();
 
                     final ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), paint.getColor(),
-                            ContextCompat.getColor(MainActivity.context, R.color.enemy));
+                            ContextCompat.getColor(GameActivity.context, R.color.enemy));
                     colorAnimation.setDuration(300); // milliseconds
                     colorAnimation.addUpdateListener(animator -> paint.setColor((int) animator.getAnimatedValue()));
                     colorAnimation.start();
@@ -112,7 +112,7 @@ public class EnemyCircle extends Circle {
         // Log.e("TAG", "First Phase Running");
         switch (attackStyle) {
             case 1:
-                ((Activity) MainActivity.context).runOnUiThread(() -> {
+                ((Activity) GameActivity.context).runOnUiThread(() -> {
                     final ValueAnimator enemyCircleAnimation = ValueAnimator.ofFloat(0, (float) radius);
                     enemyCircleAnimation.setDuration((long) timeInMs);
                     enemyCircleAnimation.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimation.getAnimatedValue().toString()));

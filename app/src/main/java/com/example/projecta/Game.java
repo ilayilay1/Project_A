@@ -23,7 +23,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Player player;
     private final CooldownBar cooldownBar;
     private final Joystick joystick;
-    private final GameLoop gameLoop;
+    private GameLoop gameLoop;
     public static final FlashScreen flashScreen = new FlashScreen();
     public static final ArrayList<EnemyRectangle> enemiesRectangles = new ArrayList<>();
     public static  ArrayList<EnemyRectangle> enemiesToDeleteRectangles = new ArrayList<>();
@@ -99,6 +99,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
+        if(gameLoop.getState().equals(Thread.State.TERMINATED)){
+            gameLoop = new GameLoop(this, surfaceHolder);
+        }
         gameLoop.startLoop();
     }
 
@@ -175,5 +178,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         for (ArrowHead arrowHead: arrowHeadToDelete)
             arrowHeadList.remove(arrowHead);
+    }
+
+    public void pause() {
+        gameLoop.stopLoop();
     }
 }
