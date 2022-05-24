@@ -26,7 +26,7 @@ public class Player extends Circle {
     private boolean dashCooldown = false, invincible = false, isDamaged = false; //No cooldown for dash and player isn't immune
     Handler handler = new Handler();
     private long lastDamageTaken, lastDashTime;
-    private int color, hitPoints = 3;
+    private int color, hitPoints = 5;
     final MediaPlayer hitSound = MediaPlayer.create(GameActivity.context, R.raw.hit);
     ValueAnimator positionXAnimation, positionYAnimation, radiusAnimationSmall, radiusAnimationBig;
     ValueAnimator[] valueAnimators;
@@ -91,10 +91,6 @@ public class Player extends Circle {
             invincible = false;
         if(lastDashTime + 1500 <= (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp)
             dashCooldown = false;
-        if(hitPoints == 0){ // Game over condition
-            //((GameActivity)GameActivity.context).game.pause();
-        }
-
     }
 
     public void setPosition(double positionX, double positionY) { // Irrelevant for now, was used for testing, might use in future for extra features
@@ -181,6 +177,10 @@ public class Player extends Circle {
 
     public boolean getDamageStatus() {
         return isDamaged;
+    }
+
+    public int getHitPoints(){
+        return hitPoints;
     }
 
     public void pause(){

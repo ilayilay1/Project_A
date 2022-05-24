@@ -11,4 +11,5 @@
     <color name="player">#00BCD4</color>
     <color name="damageTaken">#CF2A1E</color>
     <color name="enemy">#F00E43</color>
+    <color name="gameOver">#B32419</color>
 </resources>

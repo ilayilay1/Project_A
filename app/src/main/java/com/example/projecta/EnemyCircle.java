@@ -73,8 +73,14 @@ public class EnemyCircle extends Circle {
     private void thirdPhase() {
         isAnimationActive = true;
         ((Activity)GameActivity.context).runOnUiThread(() -> {
+            enemyCircleAnimationThird = ValueAnimator.ofFloat((float) staticRadius, 0); // Y value animation
+            enemyCircleAnimationThird.setDuration((long) 500);
+            enemyCircleAnimationThird.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimationThird.getAnimatedValue().toString()));
             enemyCircleAnimationThird.start();
 
+            enemyColorAnimationThird = ValueAnimator.ofFloat(255, 0); // Y value animation
+            enemyColorAnimationThird.setDuration((long) 500);
+            enemyColorAnimationThird.addUpdateListener(valueAnimator -> paint.setAlpha((int) Double.parseDouble(enemyColorAnimationThird.getAnimatedValue().toString())));
             enemyColorAnimationThird.start();
         });
     }
@@ -88,8 +94,16 @@ public class EnemyCircle extends Circle {
         switch (attackStyle) {
             case 1:
                 ((Activity) GameActivity.context).runOnUiThread(() -> {
+                    enemyCircleAnimationSecond = ValueAnimator.ofFloat(0, (float) staticRadius); // Y value animation
+                    enemyCircleAnimationSecond.setDuration((long) 300);
+                    enemyCircleAnimationSecond.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimationSecond.getAnimatedValue().toString()));
                     enemyCircleAnimationSecond.start();
 
+
+                    colorAnimationSecond = ValueAnimator.ofObject(new ArgbEvaluator(), paint.getColor(),
+                            ContextCompat.getColor(GameActivity.context, R.color.enemy));
+                    colorAnimationSecond.setDuration(300); // milliseconds
+                    colorAnimationSecond.addUpdateListener(animator -> paint.setColor((int) animator.getAnimatedValue()));
                     colorAnimationSecond.start();
                 });
                 break;
@@ -103,8 +117,14 @@ public class EnemyCircle extends Circle {
         switch (attackStyle) {
             case 1:
                 ((Activity) GameActivity.context).runOnUiThread(() -> {
+                    enemyCircleAnimationFirst = ValueAnimator.ofFloat(0, (float) radius);
+                    enemyCircleAnimationFirst.setDuration((long) timeInMs);
+                    enemyCircleAnimationFirst.addUpdateListener(valueAnimator -> radius = Double.parseDouble(enemyCircleAnimationFirst.getAnimatedValue().toString()));
                     enemyCircleAnimationFirst.start();
 
+                    enemyColorAnimationFirst = ValueAnimator.ofFloat(1, 125);
+                    enemyColorAnimationFirst.setDuration((long) timeInMs);
+                    enemyColorAnimationFirst.addUpdateListener(valueAnimator -> paint.setAlpha((int) Double.parseDouble(enemyColorAnimationFirst.getAnimatedValue().toString())));
                     enemyColorAnimationFirst.start();
                 });
                 break;

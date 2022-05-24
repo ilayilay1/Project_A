@@ -6,6 +6,12 @@
     tools:context=".GameActivity"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        tools:ignore="MissingConstraints"
+        />
+
     <com.example.projecta.Game
         android:id="@+id/gameID"
         android:layout_width="match_parent"

@@ -27,11 +27,11 @@ public class GameActivity extends AppCompatActivity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        game = new Game(this);
-        setContentView(game);
-        //setContentView(R.layout.game_layout);
+        /*game = new Game(this);
+        setContentView(game);*/
+        setContentView(R.layout.game_layout);
 
-        //game = findViewById(R.id.gameID);
+        game = findViewById(R.id.gameID);
         Log.d("lifecycle", "onCreate invoked");
     }
 

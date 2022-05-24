@@ -130,6 +130,11 @@ public class EnemyRectangle extends Rectangle {
         ((Activity) GameActivity.context).runOnUiThread(() -> {
             enemyRectangleWidthAnimationSecond1.start();
             enemyRectangleHeightAnimationSecond1.start();
+
+            colorAnimationSecond1 = ValueAnimator.ofObject(new ArgbEvaluator(), paint.getColor(),
+                    ContextCompat.getColor(GameActivity.context, R.color.enemy));
+            colorAnimationSecond1.setDuration(300); // milliseconds
+            colorAnimationSecond1.addUpdateListener(animator -> paint.setColor((int) animator.getAnimatedValue()));
             colorAnimationSecond1.start();
         });
     }
@@ -142,21 +147,25 @@ public class EnemyRectangle extends Rectangle {
                 Game.arrowHeadList.add(new ArrowHead(0, 0, ContextCompat.getColor(GameActivity.context, R.color.enemy), 1, timeInMs));
                 positionX = GameActivity.size.x / 2;
                 positionY = staticWidth / 2;
+                degree = 90;
                 break;
             case 3:
                 Game.arrowHeadList.add(new ArrowHead(0, 0, ContextCompat.getColor(GameActivity.context, R.color.enemy), 2, timeInMs));
                 positionX = GameActivity.size.x / 2;
                 positionY = GameActivity.size.y - staticWidth / 2;
+                degree = 90;
                 break;
             case 4:
                 Game.arrowHeadList.add(new ArrowHead(0, 0, ContextCompat.getColor(GameActivity.context, R.color.enemy), 3, timeInMs));
                 positionX = staticWidth / 2;
                 positionY = GameActivity.size.y / 2;
+                degree = 0;
                 break;
             case 5:
                 Game.arrowHeadList.add(new ArrowHead(0, 0, ContextCompat.getColor(GameActivity.context, R.color.enemy), 4, timeInMs));
                 positionX = GameActivity.size.x - staticWidth / 2;
                 positionY = GameActivity.size.y / 2;
+                degree = 0;
                 break;
         }
         ((Activity) GameActivity.context).runOnUiThread(() -> {

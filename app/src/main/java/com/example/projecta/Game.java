@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
@@ -35,12 +38,21 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private int firstFingerIndex;
     private FirstLevel firstLevel;
 
-
     public Game(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public Game(Context context, @Nullable AttributeSet attributeSet) {
+        super(context, attributeSet);
+        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         // Gets the surface holder and adds callback
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
+
+        SharedPreferences sp = GameActivity.context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong("timeInApplication", 0); // Restarts the internal app clock
+        editor.commit();
 
         gameLoop = new GameLoop(this, surfaceHolder);
 
@@ -104,15 +116,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             gameLoop = new GameLoop(this, surfaceHolder);
         }
         gameLoop.startLoop();
-        SharedPreferences sp = GameActivity.context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
-        gameLoop.timeInApp = Double.longBitsToDouble(sp.getLong("timeInApplication", 0));
-        firstLevel.levelMusic.start();
-        cooldownBar.resume();
-        player.resume();
-        for (EnemyRectangle enemy: enemiesRectangles)
-            enemy.resume();
-        for (EnemyCircle enemy: enemiesCircles)
-            enemy.resume();
+        resume();
     }
 
     @Override
@@ -141,7 +145,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         player.draw(canvas);
         cooldownBar.draw(canvas);
         flashScreen.draw(canvas);
-
+        if(player.getHitPoints() <= 0){
+            firstLevel.levelMusic.pause();
+            pause();
+        }
     }
 
     public void drawUPS(Canvas canvas){
@@ -178,7 +185,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         flashScreen.update();
         firstLevel.update();
 
-        Log.e("TAG", "" + gameLoop.timeInApp);
+        // Log.e("TAG", "" + gameLoop.timeInApp);
     }
 
     public static void removeEnemies(){ // Deletes enemies which were scheduled to be removed!
@@ -209,7 +216,18 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             enemy.pause();
     }
 
-    public double getTimeInApplication(){
-        return gameLoop.timeInApp;
+    public void resume(){
+        if(player.getHitPoints() > 0){
+            SharedPreferences sp = GameActivity.context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
+            gameLoop.timeInApp = Double.longBitsToDouble(sp.getLong("timeInApplication", 0));
+            firstLevel.levelMusic.start();
+            cooldownBar.resume();
+            player.resume();
+            for (EnemyRectangle enemy: enemiesRectangles)
+                enemy.resume();
+            for (EnemyCircle enemy: enemiesCircles)
+                enemy.resume();
+        }
     }
+    
 }

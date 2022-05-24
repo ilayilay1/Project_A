@@ -47,9 +47,12 @@ public class Collision {
 
         double deltaX = circle1.positionX - circle2.positionX;
         double deltaY = circle1.positionY - circle2.positionY;
-        double distance = Math.sqrt(deltaX*deltaX - deltaY*deltaY);
-        if(distance < circle1.radius + circle2.radius)
+        double distance = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+        if(distance < circle1.radius + circle2.radius){
+            Log.e("TAG", "CIRCLE COLLISION, Player position : " + circle1.positionX + " Enemy position : " + + circle2.positionX
+            + " Enemy radius : " + circle2.radius + " Player radius : " + circle1.radius + " distance " + distance);
             return true;
+        }
         else
             return false;
     }
