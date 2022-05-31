@@ -4,6 +4,7 @@ import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -25,6 +26,7 @@ public class GameActivity extends AppCompatActivity {
     public Game game;
     public ImageButton pauseButton;
     public int levelNumber;
+    public boolean isGameRunning;
     Dialog dialog;
 
     @Override
@@ -36,6 +38,7 @@ public class GameActivity extends AppCompatActivity {
         size = new Point();
         display.getSize(size);
         context = this;
+        isGameRunning = true;
 
         Intent intent = this.getIntent();
         levelNumber = intent.getIntExtra("levelChosen", 0);
@@ -50,10 +53,41 @@ public class GameActivity extends AppCompatActivity {
             game.pause();
             openPauseDialog();
         });
+
         game = findViewById(R.id.gameID);
 
         dialog = new Dialog(this);
 
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(new ScreenReceiver(), filter);
+    }
+
+    public void openGameOverDialog(){
+        game.isDialogRunning = true;
+        dialog.setContentView(R.layout.gameover_layout_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        Button btnAgain = dialog.findViewById(R.id.buttonAgain);
+        Button btnLeave = dialog.findViewById(R.id.buttonLeave);
+
+        btnAgain.setOnClickListener(view -> {
+            dialog.dismiss();
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        });
+
+        btnLeave.setOnClickListener(view -> {
+            dialog.dismiss();
+            stopService();
+            isGameRunning = false;
+            finish();
+            Log.e("TAG", "Activity should be removed");
+            startActivity(new Intent(GameActivity.this, MainMenu.class));
+        });
+
+        dialog.show();
     }
 
     public void openPauseDialog(){
@@ -69,10 +103,13 @@ public class GameActivity extends AppCompatActivity {
             game.resume();
             game.resumeObjects();
             dialog.dismiss();
+            ScreenReceiver.runOnce = true;
         });
         btnExit.setOnClickListener(view -> {
             dialog.dismiss();
             game.pause();
+            stopService();
+            isGameRunning = false;
             finish();
             startActivity(new Intent(GameActivity.this, MainMenu.class),
                     ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
@@ -82,9 +119,11 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void startService(){
-        Intent serviceIntent = new Intent(this, ScreenService.class);
-        serviceIntent.putExtra("inputExtra", String.valueOf((long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp/1000));
-        ContextCompat.startForegroundService(this, serviceIntent);
+        if(isGameRunning){
+            Intent serviceIntent = new Intent(this, ScreenService.class);
+            serviceIntent.putExtra("inputExtra", String.valueOf((long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp/1000));
+            ContextCompat.startForegroundService(this, serviceIntent);
+        }
     }
 
     public void stopService(){
@@ -107,9 +146,11 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        game.pause(); // Pauses the game
-        openPauseDialog();
-        startService();
+        if(!game.isDead){
+            game.pause(); // Pauses the game
+            openPauseDialog();
+            startService();
+        }
         super.onPause();
         Log.d("lifecycle", "onPause invoked");
     }

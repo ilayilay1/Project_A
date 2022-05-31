@@ -5,14 +5,14 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
-public class GameLoop extends  Thread{
+public class GameLoop extends  Thread {
     private boolean isRunning = false;
     private SurfaceHolder surfaceHolder;
     private Game game;
     private double averageUPS;
     private double averageFPS;
     public static final double MAX_UPS = 60.0; // CHECK THE UPS TARGET OFTEN ILAY!!!!
-    private static final double UPS_PERIOD = 1E+3/MAX_UPS;
+    private static final double UPS_PERIOD = 1E+3 / MAX_UPS;
     double timeInApp;
 
     public GameLoop(Game game, SurfaceHolder surfaceHolder) {
@@ -50,9 +50,9 @@ public class GameLoop extends  Thread{
         // Game Loop
         Canvas canvas = null;
         startTime = System.currentTimeMillis();
-        while(isRunning){
+        while (isRunning) {
             // Try to update and render game
-            try{
+            try {
                 canvas = surfaceHolder.lockCanvas();
                 synchronized (surfaceHolder) {
                     game.update();
@@ -62,14 +62,14 @@ public class GameLoop extends  Thread{
                     game.draw(canvas);
                 }
 
-            } catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             } finally {
-                if(canvas != null){
+                if (canvas != null) {
                     try {
                         surfaceHolder.unlockCanvasAndPost(canvas);
                         frameCount++;
-                    }catch(Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -77,8 +77,8 @@ public class GameLoop extends  Thread{
 
             // Pause game loop to not exceed target UPS
             elapsedTime = System.currentTimeMillis() - startTime;
-            sleepTime = (long)(updateCount * UPS_PERIOD - elapsedTime);
-            if(sleepTime > 0){
+            sleepTime = (long) (updateCount * UPS_PERIOD - elapsedTime);
+            if (sleepTime > 0) {
                 try {
                     sleep(sleepTime);
                 } catch (InterruptedException e) {
@@ -87,17 +87,17 @@ public class GameLoop extends  Thread{
             }
 
             // Skip frames to keep up with target UPS
-            while(sleepTime < 0 && updateCount < MAX_UPS-1){
+            while (sleepTime < 0 && updateCount < MAX_UPS - 1) {
                 game.update();
                 updateCount++;
                 elapsedTime = System.currentTimeMillis() - startTime;
-                sleepTime = (long)(updateCount * UPS_PERIOD - elapsedTime);
+                sleepTime = (long) (updateCount * UPS_PERIOD - elapsedTime);
                 timeInApp += UPS_PERIOD; // Tells us how much time was spent in the app
             }
 
             // Calculate average UPS and FPS
             elapsedTime = System.currentTimeMillis() - startTime;
-            if(elapsedTime >= 1000){
+            if (elapsedTime >= 1000) {
                 averageUPS = updateCount / (1E-3 * elapsedTime);
                 averageFPS = frameCount / (1E-3 * elapsedTime);
                 updateCount = 0;
@@ -111,10 +111,15 @@ public class GameLoop extends  Thread{
         Log.d("GameLoop.java", "stopLoop()");
         isRunning = false;
         // Wait for thread to join
-        try{
+        try {
             join();
-        } catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void stopLoopASynchronized() {
+        Log.d("GameLoop.java", "stopLoop()");
+        isRunning = false;
     }
 }

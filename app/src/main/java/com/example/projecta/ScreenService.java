@@ -15,18 +15,12 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 public class ScreenService extends Service {
-    private BroadcastReceiver mScreenStateReceiver = null;
 
     @Override
     public void onCreate(){
         super.onCreate();
         createNotificationChannel();
 
-        mScreenStateReceiver = new ScreenReceiver();
-        IntentFilter screenStateFilter = new IntentFilter();
-        screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
-        screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(mScreenStateReceiver, screenStateFilter);
     }
 
     @Nullable
@@ -38,7 +32,6 @@ public class ScreenService extends Service {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        unregisterReceiver(mScreenStateReceiver);
     }
 
     @Override

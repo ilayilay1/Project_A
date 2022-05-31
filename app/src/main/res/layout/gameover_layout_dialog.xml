@@ -13,7 +13,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#8F8F8F">
+            android:background="@color/white">
 
             <TextView
                 android:id="@+id/textView"
@@ -22,8 +22,8 @@
                 android:layout_marginTop="16dp"
                 android:shadowColor="#000000"
                 android:textSize="20dp"
-                android:textColor="@color/white"
-                android:text="Game Paused"
+                android:textColor="@color/enemy"
+                android:text="Game Over"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -33,34 +33,35 @@
                 android:id="@+id/imageView"
                 android:layout_width="250dp"
                 android:layout_height="150dp"
+                app:tint="@color/enemy"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
-                app:srcCompat="@drawable/ic_baseline_pause_circle_outline_24" />
+                app:srcCompat="@drawable/ic_baseline_clear_24" />
 
             <Button
-                android:id="@+id/buttonResume"
+                android:id="@+id/buttonAgain"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/btn_bg"
-                app:backgroundTint="#CFB463"
-                android:text="Resume"
+                app:backgroundTint="@color/enemy"
+                android:text="TRY AGAIN"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
             <Button
-                android:id="@+id/buttonExit"
+                android:id="@+id/buttonLeave"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="RETURN TO MENU"
                 android:background="@drawable/btn_bg"
-                app:backgroundTint="#CFB463"
+                app:backgroundTint="@color/enemy"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/buttonResume" />
+                app:layout_constraintTop_toBottomOf="@+id/buttonAgain" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

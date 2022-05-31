@@ -1,10 +1,16 @@
 package com.example.projecta;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -12,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,7 +46,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public static  ArrayList<ArrowHead> arrowHeadToDelete;
     private int firstFingerIndex;
     private Level level;
-    public boolean isDialogRunning = false;
+    public boolean isDialogRunning = false, isDead = false;
+    Dialog dialog;
 
     public Game(Context context) {
         this(context, null);
@@ -71,6 +79,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick = new Joystick(275, 700, 100, 40); // X and Y coordinates are irrelevant after v1.5
         cooldownBar = new CooldownBar(1000, 450, 0, 0, 10, ContextCompat.getColor(context, R.color.white)); //Width is temporarily 0 because the cooldown bar is a set length of 100
         player = new Player(cooldownBar ,joystick, 1000, 500, 30, ContextCompat.getColor(context, R.color.player));
+
+        dialog = new Dialog(GameActivity.context);
 
         level = new Level();
 
@@ -160,9 +170,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         player.draw(canvas);
         cooldownBar.draw(canvas);
         flashScreen.draw(canvas);
-        if(player.getHitPoints() <= 0){
+        if(player.getHitPoints() <= 0 && !isDead){
             level.levelMusic.pause();
+            isDead = true;
             pause();
+            ((Activity) GameActivity.context).runOnUiThread(() -> ((GameActivity)GameActivity.context).openGameOverDialog());
+            //GameActivity.context.startActivity(new Intent(GameActivity.context, MainMenu.class));
         }
     }
 
@@ -235,12 +248,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void pause() {
-        gameLoop.stopLoop();
+        if(!isDead)
+            gameLoop.stopLoop();
+        else
+            gameLoop.stopLoopASynchronized();
 
         SharedPreferences sp = GameActivity.context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putLong("timeInApplication", Double.doubleToRawLongBits(gameLoop.timeInApp));
-        editor.commit();
+        editor.apply();
 
         level.levelMusic.pause();
         cooldownBar.pause();
@@ -270,5 +286,4 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 enemy.resume();
         }
     }
-    
 }

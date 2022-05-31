@@ -26,7 +26,7 @@ public class Player extends Circle {
     private boolean dashCooldown = false, invincible = false, isDamaged = false; //No cooldown for dash and player isn't immune
     Handler handler = new Handler();
     private long lastDamageTaken, lastDashTime;
-    private int color, hitPoints = 5;
+    private int color, hitPoints = 2;
     final MediaPlayer hitSound = MediaPlayer.create(GameActivity.context, R.raw.hit);
     ValueAnimator positionXAnimation, positionYAnimation, radiusAnimationSmall, radiusAnimationBig;
     ValueAnimator[] valueAnimators;
