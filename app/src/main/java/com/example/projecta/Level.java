@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat;
 
 import java.util.Random;
 
-public class FirstLevel {
+public class Level {
  // Note : Enemy attacks that use style 5 and 4 should be 0 degrees! 2 and 3 should be 90 degrees! and 1 can be whatever
     public static MediaPlayer levelMusic;
     boolean isRunning = false, runOnce = false;
@@ -15,13 +15,32 @@ public class FirstLevel {
     private long previousTime = 0, previousTime2 = 0;
     private int levelStage = 1, timeMs1 = 0, timeMs2 = 0;
 
-    public FirstLevel(){
-        levelMusic = MediaPlayer.create(GameActivity.context, R.raw.level1);
-        levelMusic.setLooping(true);
-        //levelMusic.start(); Song should start in pause/resume functions
+    public Level(){
+        switch(((GameActivity)GameActivity.context).levelNumber){
+            case 1:
+                levelMusic = MediaPlayer.create(GameActivity.context, R.raw.level1);
+                levelMusic.setLooping(true);
+                break;
+            case 2:
+                //levelMusic = MediaPlayer.create(GameActivity.context, R.raw.level2);
+                levelMusic.setLooping(true);
+                break;
+            case 3:
+                //levelMusic = MediaPlayer.create(GameActivity.context, R.raw.level3);
+                levelMusic.setLooping(true);
+                break;
+        }
     }
 
-    public void update() {
+    public void updateLevel3(){
+
+    }
+
+    public void updateLevel2(){
+
+    }
+
+    public void updateLevel1() {
         long currentTime = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp;
         switch(levelStage)
         {

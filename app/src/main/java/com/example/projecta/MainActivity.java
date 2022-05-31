@@ -22,10 +22,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); //Enter the game Class :)
 
-        startButton = findViewById(R.id.buttonStart);
-        startButton.setOnClickListener(view -> {
-            Intent intent = new Intent(this, GameActivity.class);
-            startActivity(intent);
-        });
+        Intent intent = new Intent(this, MainMenu.class);
+        startActivity(intent);
     }
 }

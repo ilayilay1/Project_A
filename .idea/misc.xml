@@ -4,8 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Android studio stuff/ProjectA/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Android studio stuff/Project_A/app/src/main/res/drawable/background_1.xml" value="0.3828125" />
+        <entry key="..\:/Android studio stuff/Project_A/app/src/main/res/drawable/background_2.xml" value="0.3828125" />
+        <entry key="..\:/Android studio stuff/Project_A/app/src/main/res/drawable/background_3.xml" value="0.3828125" />
+        <entry key="..\:/Android studio stuff/Project_A/app/src/main/res/drawable/gradient_list.xml" value="0.3509259259259259" />
+        <entry key="..\:/Android studio stuff/Project_A/app/src/main/res/drawable/roundedbutton.xml" value="0.3828125" />
         <entry key="..\:/Android studio stuff/Project_A/app/src/main/res/layout/activity_main.xml" value="0.20520833333333333" />
         <entry key="..\:/Android studio stuff/Project_A/app/src/main/res/layout/game_layout.xml" value="0.22" />
+        <entry key="..\:/Android studio stuff/Project_A/app/src/main/res/layout/level_manu_layout.xml" value="0.36666666666666664" />
+        <entry key="..\:/Android studio stuff/Project_A/app/src/main/res/layout/main_menu_layout.xml" value="0.2727272727272727" />
+        <entry key="..\:/Android studio stuff/Project_A/app/src/main/res/layout/tutorial_layout.xml" value="0.253125" />
       </map>
     </option>
   </component>

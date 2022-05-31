@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/gradient_list"
+    android:id="@+id/menuLayout"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/logo"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"/>
+
+    <Button
+        android:id="@+id/levelmenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="#8BC34A"
+        android:text="Level Menu"
+        android:gravity="center"
+        app:icon="@drawable/ic_baseline_format_list_numbered_24"
+        app:iconGravity="textStart"/>
+
+    <Button
+        android:id="@+id/endless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#4CAF50"
+        android:text="Endless"
+        android:gravity="center"
+        app:icon="@drawable/ic_baseline_all_inclusive_24"
+        app:iconGravity="textStart"/>
+
+    <Button
+        android:id="@+id/tutorial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#736D42"
+        android:text="Tutorial"
+        android:gravity="center"
+        app:icon="@drawable/ic_baseline_help_24"
+        app:iconGravity="textStart"/>
+
+    <Button
+        android:id="@+id/achievements"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/achievements"
+        android:text="Achievements"
+        android:gravity="center"
+        app:icon="@drawable/ic_baseline_grade_24"
+        app:iconGravity="textStart"/>
+
+    <Button
+        android:id="@+id/exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/gameOver"
+        android:text="Exit"
+        android:gravity="center"
+        app:icon="@drawable/ic_baseline_power_settings_new_24"
+        app:iconGravity="textStart"/>
+
+</LinearLayout>

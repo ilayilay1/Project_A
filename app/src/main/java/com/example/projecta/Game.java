@@ -4,19 +4,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Game Manages all objects in the game and is responsible for updating all states and
@@ -35,8 +36,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public static  ArrayList<EnemyCircle> enemiesToDeleteCircles = new ArrayList<>();
     public static final ArrayList<ArrowHead> arrowHeadList = new ArrayList<>();
     public static  ArrayList<ArrowHead> arrowHeadToDelete = new ArrayList<>();
-    private int firstFingerIndex;
-    private FirstLevel firstLevel;
+    private int firstFingerIndex, levelNumber;
+    private Level level;
 
     public Game(Context context) {
         this(context, null);
@@ -60,7 +61,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick = new Joystick(275, 700, 100, 40); // X and Y coordinates are irrelevant after v1.5
         cooldownBar = new CooldownBar(1000, 450, 0, 0, 10, ContextCompat.getColor(context, R.color.white)); //Width is temporarily 0 because the cooldown bar is a set length of 100
         player = new Player(cooldownBar ,joystick, 1000, 500, 30, ContextCompat.getColor(context, R.color.player));
-        firstLevel = new FirstLevel();
+
+        level = new Level();
 
         setFocusable(true);
     }
@@ -115,7 +117,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         if(gameLoop.getState().equals(Thread.State.TERMINATED)){
             gameLoop = new GameLoop(this, surfaceHolder);
         }
-        gameLoop.startLoop();
         resume();
     }
 
@@ -132,8 +133,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas){
         super.draw(canvas);
-        drawUPS(canvas);
-        drawFPS(canvas);
+        //drawUPS(canvas);
+        //drawFPS(canvas);
+        drawHP(canvas);
 
         joystick.draw(canvas);
         for (EnemyRectangle enemy: enemiesRectangles)
@@ -146,9 +148,19 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         cooldownBar.draw(canvas);
         flashScreen.draw(canvas);
         if(player.getHitPoints() <= 0){
-            firstLevel.levelMusic.pause();
+            level.levelMusic.pause();
             pause();
         }
+    }
+
+    public void drawHP(Canvas canvas){
+        String hp = Integer.toString(player.getHitPoints());
+        Paint paint = new Paint();
+        int color = ContextCompat.getColor(getContext(), R.color.magenta);
+        paint.setColor(color);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        paint.setTextSize(50);
+        canvas.drawText("Remaining Health : " + hp, 50, 75, paint);
     }
 
     public void drawUPS(Canvas canvas){
@@ -157,7 +169,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         int color = ContextCompat.getColor(getContext(), R.color.magenta);
         paint.setColor(color);
         paint.setTextSize(50);
-        canvas.drawText("UPS: " + averageUPS, 100, 100, paint);
+        canvas.drawText("UPS: " + averageUPS, 50, 200, paint);
     }
 
     public void drawFPS(Canvas canvas){
@@ -166,7 +178,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         int color = ContextCompat.getColor(getContext(), R.color.magenta);
         paint.setColor(color);
         paint.setTextSize(50);
-        canvas.drawText("FPS: " + averageFPS, 100, 200, paint);
+        canvas.drawText("FPS: " + averageFPS, 50, 300, paint);
     }
 
     public void update() {
@@ -183,7 +195,17 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             enemy.update();
         removeEnemies();
         flashScreen.update();
-        firstLevel.update();
+
+        switch(((GameActivity)GameActivity.context).levelNumber){
+            case 1:
+                level.updateLevel1();
+                break;
+            case 2:
+                level.updateLevel2();
+                break;
+            case 3:
+                level.updateLevel3();
+        }
 
         // Log.e("TAG", "" + gameLoop.timeInApp);
     }
@@ -207,7 +229,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         editor.putLong("timeInApplication", Double.doubleToRawLongBits(gameLoop.timeInApp));
         editor.commit();
 
-        firstLevel.levelMusic.pause();
+        level.levelMusic.pause();
         cooldownBar.pause();
         player.pause();
         for (EnemyRectangle enemy: enemiesRectangles)
@@ -217,10 +239,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void resume(){
+        gameLoop.startLoop(); // Resumes the gameLoop
+
         if(player.getHitPoints() > 0){
             SharedPreferences sp = GameActivity.context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
             gameLoop.timeInApp = Double.longBitsToDouble(sp.getLong("timeInApplication", 0));
-            firstLevel.levelMusic.start();
+            level.levelMusic.start();
             cooldownBar.resume();
             player.resume();
             for (EnemyRectangle enemy: enemiesRectangles)
