@@ -1,0 +1,242 @@
+@startuml
+class com.example.projecta.LevelMenuActivity {
+# void onCreate(Bundle)
+}
+class com.example.projecta.EnemyCircle {
+- boolean isDeadly
+- float timeInMs
+- int attackStyle
+- int ATTACK_FIRST_PHASE
+- double staticRadius
+- long timeSincePhase
+~ ValueAnimator enemyCircleAnimationFirst
+~ ValueAnimator[] valueAnimators
++ void update()
+- void thirdPhase()
+- void secondPhase()
+- void firstPhase()
++ boolean getDeadly()
++ void pause()
++ void resume()
++ void createAnimators()
+}
+abstract class com.example.projecta.Circle {
+# double radius
+# Paint paint
++ void draw(Canvas)
+}
+class com.example.projecta.MainActivity {
+~ Button startButton
+# void onCreate(Bundle)
+}
+class com.example.projecta.MainMenu {
+# void onCreate(Bundle)
++ void onBackPressed()
++ void exitApplicationDialog()
+}
+class com.example.projecta.Player {
+- {static} double SPEED_PIXELS_PER_SECOND
+- {static} double MAX_SPEED
+- Joystick joystick
+- CooldownBar cooldownBar
+- boolean dashCooldown
+~ Handler handler
+- long lastDamageTaken
+- int color
+~ MediaPlayer hitSound
+~ ValueAnimator positionXAnimation
+~ ValueAnimator[] valueAnimators
++ void update()
++ void setPosition(double,double)
++ void damageAnimation()
++ void dashForward()
++ boolean getCooldown()
++ boolean getDamageStatus()
++ int getHitPoints()
++ void pause()
++ void resume()
++ void createAnimators()
+}
+class com.example.projecta.GameActivity {
++ {static} Point size
++ {static} Context context
++ Game game
++ ImageButton pauseButton
++ int levelNumber
+# void onCreate(Bundle)
++ void startService()
++ void stopService()
+# void onStart()
+# void onResume()
+# void onPause()
+# void onStop()
+# void onRestart()
+# void onDestroy()
++ void onBackPressed()
+}
+class com.example.projecta.ScreenReceiver {
++ {static} boolean wasScreenOn
++ void onReceive(Context,Intent)
+}
+class com.example.projecta.ArrowHead {
+# int staticDirection
+# Paint paint
+- long timeOfCreation
+# double timeInMs
++ void draw(Canvas)
++ void update()
+}
+abstract class com.example.projecta.Rectangle {
+# Paint paint
+# float degree
+# double width
++ void draw(Canvas)
+}
+class com.example.projecta.Level {
++ {static} MediaPlayer levelMusic
+~ boolean isRunning
+~ Random rnd
+- long previousTime
+- int levelStage
++ void updateLevel3()
++ void updateLevel2()
++ void updateLevel1()
++ void updateLevelEndless()
+}
+class com.example.projecta.Game {
+- Player player
+- CooldownBar cooldownBar
+- Joystick joystick
++ GameLoop gameLoop
++ {static} FlashScreen flashScreen
++ {static} ArrayList<EnemyRectangle> enemiesRectangles
++ {static} ArrayList<EnemyRectangle> enemiesToDeleteRectangles
++ {static} ArrayList<EnemyCircle> enemiesCircles
++ {static} ArrayList<EnemyCircle> enemiesToDeleteCircles
++ {static} ArrayList<ArrowHead> arrowHeadList
++ {static} ArrayList<ArrowHead> arrowHeadToDelete
+- int firstFingerIndex
+- Level level
++ boolean onTouchEvent(MotionEvent)
++ void surfaceCreated(SurfaceHolder)
++ void surfaceChanged(SurfaceHolder,int,int,int)
++ void surfaceDestroyed(SurfaceHolder)
++ void draw(Canvas)
++ void drawHP(Canvas)
++ void drawUPS(Canvas)
++ void drawFPS(Canvas)
++ void update()
++ {static} void removeEnemies()
++ void pause()
++ void resume()
+}
+class com.example.projecta.ScreenService {
+- BroadcastReceiver mScreenStateReceiver
++ void onCreate()
++ IBinder onBind(Intent)
++ void onDestroy()
++ int onStartCommand(Intent,int,int)
+- void createNotificationChannel()
+}
+class com.example.projecta.CooldownBar {
+~ ValueAnimator barAnimation
++ void update()
++ void trackPlayer(double,double)
++ void startCountdown()
++ void pause()
++ void resume()
+}
+class com.example.projecta.EnemyRectangle {
+- boolean isDeadly
+- float timeInMs
+- int attackStyle
+- int ATTACK_FIRST_PHASE
+- double staticWidth
+- long timeSincePhase
+~ ValueAnimator enemyColorAnimationFirst
+~ ValueAnimator[] valueAnimators
++ void update()
+- void thirdPhase()
+- void secondPhase()
+- void firstPhase()
++ boolean getDeadly()
++ void pause()
++ void resume()
++ void createAnimators()
+}
+class com.example.projecta.TutorialActivity {
+# void onCreate(Bundle)
+}
+class com.example.projecta.Collision {
++ {static} boolean circleToRect(Circle,Rectangle,boolean)
++ {static} boolean circleToCircle(Circle,Circle,boolean)
+}
+class com.example.projecta.GameLoop {
+- boolean isRunning
+- SurfaceHolder surfaceHolder
+- Game game
+- double averageUPS
+- double averageFPS
++ {static} double MAX_UPS
+- {static} double UPS_PERIOD
+~ double timeInApp
++ double getAverageUPS()
++ double getAverageFPS()
++ void startLoop()
++ void run()
++ void stopLoop()
+}
+class com.example.projecta.Joystick {
+- Paint innerCirclePaint
+- int innerCircleRadius
+- double joystickCenterToTouchDistance
+- boolean isPressed
++ void draw(Canvas)
++ void update()
+- void updateInnerCirclePosition()
++ boolean isPressed(double,double)
++ void setIsPressed(boolean)
++ boolean getIsPressed()
++ void setActuator(double,double)
++ void resetActuator()
++ void setLocation(int,int)
++ void setVisible(boolean)
++ boolean getVisible()
++ double getActuatorX()
++ double getActuatorY()
+}
+class com.example.projecta.FlashScreen {
+- long timeOfActivation
+- boolean flashActive
++ void update()
++ void activateFlashScreen()
+}
+abstract class com.example.projecta.GameObject {
+# double positionX
+# double positionY
+# double velocityX
+# double velocityY
++ {abstract}void draw(Canvas)
++ {abstract}void update()
+}
+
+
+androidx.appcompat.app.AppCompatActivity <|-- com.example.projecta.LevelMenuActivity
+com.example.projecta.Circle <|-- com.example.projecta.EnemyCircle
+com.example.projecta.GameObject <|-- com.example.projecta.Circle
+android.app.Activity <|-- com.example.projecta.MainActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.projecta.MainMenu
+com.example.projecta.Circle <|-- com.example.projecta.Player
+androidx.appcompat.app.AppCompatActivity <|-- com.example.projecta.GameActivity
+android.content.BroadcastReceiver <|-- com.example.projecta.ScreenReceiver
+com.example.projecta.GameObject <|-- com.example.projecta.ArrowHead
+com.example.projecta.GameObject <|-- com.example.projecta.Rectangle
+com.example.projecta.Callback <|.. com.example.projecta.Game
+android.view.SurfaceView <|-- com.example.projecta.Game
+android.app.Service <|-- com.example.projecta.ScreenService
+com.example.projecta.Rectangle <|-- com.example.projecta.CooldownBar
+com.example.projecta.Rectangle <|-- com.example.projecta.EnemyRectangle
+androidx.appcompat.app.AppCompatActivity <|-- com.example.projecta.TutorialActivity
+com.example.projecta.Thread <|-- com.example.projecta.GameLoop
+com.example.projecta.Rectangle <|-- com.example.projecta.FlashScreen
+@enduml

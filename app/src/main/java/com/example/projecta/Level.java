@@ -106,6 +106,11 @@ public class Level {
                 }
                 break;
         }
+
+    }
+
+    public void updateLevelEndless(){
+
     }
 
 }

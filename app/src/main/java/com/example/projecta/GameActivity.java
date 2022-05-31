@@ -1,13 +1,18 @@
 package com.example.projecta;
 
+import android.app.ActivityOptions;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,10 +25,12 @@ public class GameActivity extends AppCompatActivity {
     public Game game;
     public ImageButton pauseButton;
     public int levelNumber;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("lifecycle", "onCreate invoked");
 
         Display display = getWindowManager().getDefaultDisplay(); //Get Dimensions
         size = new Point();
@@ -41,10 +48,37 @@ public class GameActivity extends AppCompatActivity {
         pauseButton = findViewById(R.id.button);
         pauseButton.setOnClickListener(view -> {
             game.pause();
+            openPauseDialog();
         });
         game = findViewById(R.id.gameID);
-        Log.d("lifecycle", "onCreate invoked");
 
+        dialog = new Dialog(this);
+
+    }
+
+    public void openPauseDialog(){
+        game.isDialogRunning = true;
+        dialog.setContentView(R.layout.pause_layout_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        Button btnResume = dialog.findViewById(R.id.buttonResume);
+        Button btnExit = dialog.findViewById(R.id.buttonExit);
+
+        btnResume.setOnClickListener(view -> {
+            game.isDialogRunning = false;
+            game.resume();
+            game.resumeObjects();
+            dialog.dismiss();
+        });
+        btnExit.setOnClickListener(view -> {
+            dialog.dismiss();
+            game.pause();
+            finish();
+            startActivity(new Intent(GameActivity.this, MainMenu.class),
+                    ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        });
+
+        dialog.show();
     }
 
     public void startService(){
@@ -74,6 +108,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         game.pause(); // Pauses the game
+        openPauseDialog();
         startService();
         super.onPause();
         Log.d("lifecycle", "onPause invoked");

@@ -39,7 +39,6 @@ public class ScreenService extends Service {
     public void onDestroy(){
         super.onDestroy();
         unregisterReceiver(mScreenStateReceiver);
-        stopSelf();
     }
 
     @Override

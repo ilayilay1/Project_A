@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -29,15 +30,16 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final CooldownBar cooldownBar;
     private final Joystick joystick;
     public GameLoop gameLoop;
-    public static final FlashScreen flashScreen = new FlashScreen();
-    public static final ArrayList<EnemyRectangle> enemiesRectangles = new ArrayList<>();
-    public static  ArrayList<EnemyRectangle> enemiesToDeleteRectangles = new ArrayList<>();
-    public static final ArrayList<EnemyCircle> enemiesCircles = new ArrayList<>();
-    public static  ArrayList<EnemyCircle> enemiesToDeleteCircles = new ArrayList<>();
-    public static final ArrayList<ArrowHead> arrowHeadList = new ArrayList<>();
-    public static  ArrayList<ArrowHead> arrowHeadToDelete = new ArrayList<>();
-    private int firstFingerIndex, levelNumber;
+    public static FlashScreen flashScreen;
+    public static ArrayList<EnemyRectangle> enemiesRectangles;
+    public static  ArrayList<EnemyRectangle> enemiesToDeleteRectangles;
+    public static ArrayList<EnemyCircle> enemiesCircles;
+    public static  ArrayList<EnemyCircle> enemiesToDeleteCircles;
+    public static ArrayList<ArrowHead> arrowHeadList;
+    public static  ArrayList<ArrowHead> arrowHeadToDelete;
+    private int firstFingerIndex;
     private Level level;
+    public boolean isDialogRunning = false;
 
     public Game(Context context) {
         this(context, null);
@@ -56,6 +58,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         editor.commit();
 
         gameLoop = new GameLoop(this, surfaceHolder);
+
+        flashScreen = new FlashScreen();
+        enemiesRectangles = new ArrayList<>();
+        enemiesToDeleteRectangles = new ArrayList<>();
+        enemiesCircles = new ArrayList<>();
+        enemiesToDeleteCircles = new ArrayList<>();
+        arrowHeadList = new ArrayList<>();
+        arrowHeadToDelete = new ArrayList<>();
 
         // Make game objects
         joystick = new Joystick(275, 700, 100, 40); // X and Y coordinates are irrelevant after v1.5
@@ -114,10 +124,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
-        if(gameLoop.getState().equals(Thread.State.TERMINATED)){
-            gameLoop = new GameLoop(this, surfaceHolder);
+        if(!isDialogRunning){
+            if(gameLoop.getState().equals(Thread.State.TERMINATED)){
+                gameLoop = new GameLoop(this, surfaceHolder);
+            }
+            resume();
+            resumeObjects();
         }
-        resume();
     }
 
     @Override
@@ -239,8 +252,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void resume(){
+        SurfaceHolder surfaceHolder = getHolder();
+        gameLoop = new GameLoop(this, surfaceHolder);
         gameLoop.startLoop(); // Resumes the gameLoop
+    }
 
+    public void resumeObjects(){
         if(player.getHitPoints() > 0){
             SharedPreferences sp = GameActivity.context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
             gameLoop.timeInApp = Double.longBitsToDouble(sp.getLong("timeInApplication", 0));

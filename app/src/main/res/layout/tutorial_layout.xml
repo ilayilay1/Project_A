@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/white"
-        android:text="In order to avoid very dangerous situations, while holding down the joystick you are able to place down a second finger in order to dash forward! While dahsing you're invincible but you will be put on cooldown before you can dash again"/>
+        android:text="In order to avoid very dangerous situations, while holding down the joystick you are able to place down a second finger in order to dash forward! While dashing you're invincible but you will be put on cooldown before you can dash again"/>
 
     <TextView
         android:layout_marginTop="20dp"
