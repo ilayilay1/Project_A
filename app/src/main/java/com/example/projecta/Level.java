@@ -1,5 +1,6 @@
 package com.example.projecta;
 
+import android.app.Activity;
 import android.media.MediaPlayer;
 import android.os.Handler;
 
@@ -14,12 +15,14 @@ public class Level {
     Random rnd = new Random();
     private long previousTime = 0, previousTime2 = 0;
     private int levelStage = 1, timeMs1 = 0, timeMs2 = 0;
+    public static int levelLength = 1;
 
     public Level(){
         switch(((GameActivity)GameActivity.context).levelNumber){
             case 1:
                 levelMusic = MediaPlayer.create(GameActivity.context, R.raw.level1);
                 levelMusic.setLooping(true);
+                levelLength = 50000;
                 break;
             case 2:
                 //levelMusic = MediaPlayer.create(GameActivity.context, R.raw.level2);
@@ -42,6 +45,9 @@ public class Level {
 
     public void updateLevel1() {
         long currentTime = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp;
+        if(currentTime > levelLength){
+            ((Activity) GameActivity.context).runOnUiThread(() -> ((GameActivity)GameActivity.context).openGameWonDialog());
+        }
         switch(levelStage)
         {
             case 2:

@@ -63,6 +63,27 @@ public class GameActivity extends AppCompatActivity {
         registerReceiver(new ScreenReceiver(), filter);
     }
 
+    public void openGameWonDialog(){
+        game.isDead = true;
+        game.pause();
+        game.isDialogRunning = true;
+        dialog.setContentView(R.layout.gamewon_layot_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        Button btnWin = dialog.findViewById(R.id.victoryBtn);
+
+        btnWin.setOnClickListener(view -> {
+            dialog.dismiss();
+            stopService();
+            isGameRunning = false;
+            finish();
+            Log.e("TAG", "Activity should be removed");
+            startActivity(new Intent(GameActivity.this, MainMenu.class));
+        });
+
+        dialog.show();
+    }
+
     public void openGameOverDialog(){
         game.isDialogRunning = true;
         dialog.setContentView(R.layout.gameover_layout_dialog);
@@ -121,7 +142,7 @@ public class GameActivity extends AppCompatActivity {
     public void startService(){
         if(isGameRunning){
             Intent serviceIntent = new Intent(this, ScreenService.class);
-            serviceIntent.putExtra("inputExtra", String.valueOf((long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp/1000));
+            serviceIntent.putExtra("inputExtra", Integer.toString((int) (((double) ((double)((GameActivity)GameActivity.context).game.gameLoop.timeInApp)/Level.levelLength)*100)));
             ContextCompat.startForegroundService(this, serviceIntent);
         }
     }

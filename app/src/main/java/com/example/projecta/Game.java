@@ -159,6 +159,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         //drawUPS(canvas);
         //drawFPS(canvas);
         drawHP(canvas);
+        drawPercentage(canvas);
 
         joystick.draw(canvas);
         for (EnemyRectangle enemy: enemiesRectangles)
@@ -177,6 +178,16 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             ((Activity) GameActivity.context).runOnUiThread(() -> ((GameActivity)GameActivity.context).openGameOverDialog());
             //GameActivity.context.startActivity(new Intent(GameActivity.context, MainMenu.class));
         }
+    }
+
+    private void drawPercentage(Canvas canvas) {
+        String percentage = Integer.toString((int) (((double) ((double)((GameActivity)GameActivity.context).game.gameLoop.timeInApp)/level.levelLength)*100));
+        Paint paint = new Paint();
+        int color = ContextCompat.getColor(getContext(), R.color.magenta);
+        paint.setColor(color);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        paint.setTextSize(50);
+        canvas.drawText("Progress : " + percentage + "%", 50, 150, paint);
     }
 
     public void drawHP(Canvas canvas){
