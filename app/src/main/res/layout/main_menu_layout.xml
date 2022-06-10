@@ -48,17 +48,6 @@
         app:iconGravity="textStart"/>
 
     <Button
-        android:id="@+id/achievements"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/achievements"
-        android:text="Achievements"
-        android:gravity="center"
-        app:icon="@drawable/ic_baseline_grade_24"
-        app:iconGravity="textStart"/>
-
-    <Button
         android:id="@+id/exit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

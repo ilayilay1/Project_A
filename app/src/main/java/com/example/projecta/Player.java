@@ -38,6 +38,11 @@ public class Player extends Circle {
         this.cooldownBar = cooldownBar;
         this.color = color;
         createAnimators();
+
+        if(((GameActivity)GameActivity.context).levelNumber == 99)
+            hitPoints = 10;
+        else
+            hitPoints = 5;
     }
 
 

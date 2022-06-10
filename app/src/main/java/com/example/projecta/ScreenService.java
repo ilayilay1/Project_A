@@ -42,7 +42,7 @@ public class ScreenService extends Service {
         //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, "CHANNEL_ID")
                 .setContentTitle("The game is still running!")
-                .setContentText("Come back! you're " + input + "% done with the level!")
+                .setContentText("Come back! you're " + input + " done with the level!")
                 .setSmallIcon(R.drawable.pause_button)
                 //.setContentIntent(pendingIntent)
                 .build();

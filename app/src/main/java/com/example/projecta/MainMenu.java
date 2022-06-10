@@ -20,7 +20,14 @@ public class MainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu_layout);
 
+        Intent intentLevel = new Intent(MainMenu.this, GameActivity.class);
+
         Bundle b = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+
+        findViewById(R.id.endless).setOnClickListener(view -> {
+            intentLevel.putExtra("levelChosen", 99);
+            startActivity(intentLevel);
+        });
 
         findViewById(R.id.levelmenu).setOnClickListener(view -> startActivity(new Intent(MainMenu.this, LevelMenuActivity.class), b));
 

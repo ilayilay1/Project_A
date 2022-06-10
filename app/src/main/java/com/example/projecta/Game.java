@@ -159,7 +159,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         //drawUPS(canvas);
         //drawFPS(canvas);
         drawHP(canvas);
-        drawPercentage(canvas);
+        if(((GameActivity)GameActivity.context).levelNumber == 99)
+            drawProgression(canvas);
+        else
+            drawPercentage(canvas);
 
         joystick.draw(canvas);
         for (EnemyRectangle enemy: enemiesRectangles)
@@ -188,6 +191,17 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         paint.setTextSize(50);
         canvas.drawText("Progress : " + percentage + "%", 50, 150, paint);
+    }
+
+    private void drawProgression(Canvas canvas) {
+        String minutes = Integer.toString((int) (((double) ((double)((GameActivity)GameActivity.context).game.gameLoop.timeInApp)/60000)));
+        String seconds = Integer.toString((int) (((double) ((double)((GameActivity)GameActivity.context).game.gameLoop.timeInApp)/1000)) - 60*Integer.valueOf(minutes));
+        Paint paint = new Paint();
+        int color = ContextCompat.getColor(getContext(), R.color.magenta);
+        paint.setColor(color);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        paint.setTextSize(50);
+        canvas.drawText("Time : " + minutes + ":" + seconds, 50, 150, paint);
     }
 
     public void drawHP(Canvas canvas){
@@ -242,6 +256,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 break;
             case 3:
                 level.updateLevel3();
+                break;
+            case 99:
+                level.updateLevelEndless();
+                break;
         }
 
         // Log.e("TAG", "" + gameLoop.timeInApp);

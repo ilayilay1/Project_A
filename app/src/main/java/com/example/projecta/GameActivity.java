@@ -142,7 +142,10 @@ public class GameActivity extends AppCompatActivity {
     public void startService(){
         if(isGameRunning){
             Intent serviceIntent = new Intent(this, ScreenService.class);
-            serviceIntent.putExtra("inputExtra", Integer.toString((int) (((double) ((double)((GameActivity)GameActivity.context).game.gameLoop.timeInApp)/Level.levelLength)*100)));
+            if (levelNumber == 99)
+                serviceIntent.putExtra("inputExtra", "not");
+            else
+                serviceIntent.putExtra("inputExtra", Integer.toString((int) (((double) ((double)((GameActivity)GameActivity.context).game.gameLoop.timeInApp)/Level.levelLength)*100))+"%");
             ContextCompat.startForegroundService(this, serviceIntent);
         }
     }
