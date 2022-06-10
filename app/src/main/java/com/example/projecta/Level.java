@@ -130,42 +130,42 @@ public class Level {
     public void updateLevelEndless(){
         long currentTime = (long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp;
         double difficultyProgression = (((long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp)/25000) - 6;
-        final int DIFFICULTY_MULTIPLIER = 1; // Changable multiplier for the difficulty progression
+        final int DIFFICULTY_MULTIPLIER = 1; // Changeable multiplier for the difficulty progression
         double difficultyLevel = 1/(1 + Math.exp(difficultyProgression * DIFFICULTY_MULTIPLIER));
         levelStage = (int) (((long) ((GameActivity)GameActivity.context).game.gameLoop.timeInApp)/30000);
         switch(levelStage){
             case 5:
-                if(currentTime - previousTimes[5] >= 1200*difficultyLevel){
+                if(currentTime - previousTimes[5] >= 500 + 1200*difficultyLevel){
                     Game.enemiesCircles.add(new EnemyCircle(ContextCompat.getColor(GameActivity.context, R.color.enemy), rnd.nextInt(GameActivity.size.x), rnd.nextInt(GameActivity.size.y),
                             90 + 150*(1-difficultyLevel), 1000, 1));
                     previousTimes[5] = currentTime;
                 }
             case 4:
-                if(currentTime - previousTimes[4] >= 1000*difficultyLevel) {
+                if(currentTime - previousTimes[4] >= 500 + 1000*difficultyLevel) {
                     Game.enemiesRectangles.add(new EnemyRectangle(GameActivity.size.x / (rnd.nextDouble() + rnd.nextInt(5)), GameActivity.size.y / (rnd.nextDouble() + rnd.nextInt(5)), 90, 75 + 75 * difficultyLevel, 75 + 75 * difficultyLevel,
                             ContextCompat.getColor(GameActivity.context, R.color.enemy), 900, 1));
                     previousTimes[4] = currentTime;
                 }
             case 3:
-                if(currentTime - previousTimes[3] >= 3000*difficultyLevel) {
+                if(currentTime - previousTimes[3] >= 500 + 3000*difficultyLevel) {
                     Game.enemiesRectangles.add(new EnemyRectangle(0, 0, 90, 100 + 50*difficultyLevel, 3000,
                             ContextCompat.getColor(GameActivity.context, R.color.enemy), 3200 + (int)(1250*difficultyLevel), rnd.nextInt(4) + 2));
                     previousTimes[3] = currentTime;
                 }
             case 2:
-                if(currentTime - previousTimes[2] >= 900*difficultyLevel){
+                if(currentTime - previousTimes[2] >= 500 + 900*difficultyLevel){
                     Game.enemiesRectangles.add(new EnemyRectangle( GameActivity.size.x/2, GameActivity.size.y/(rnd.nextDouble() + rnd.nextInt(5)), rnd.nextInt(11)+85, 75, 3000,
                             ContextCompat.getColor(GameActivity.context, R.color.enemy), 700 +(int)(400*difficultyLevel), 1));
                     previousTimes[2] = currentTime;
                 }
             case 1:
-                if(currentTime - previousTimes[1] >= 750*difficultyLevel){
+                if(currentTime - previousTimes[1] >= 500 + 750*difficultyLevel){
                     Game.enemiesCircles.add(new EnemyCircle(ContextCompat.getColor(GameActivity.context, R.color.enemy), rnd.nextInt(GameActivity.size.x), rnd.nextInt(GameActivity.size.y),
                             70 + 150*(1-difficultyLevel), 250 + (int)(500*difficultyLevel), 1));
                     previousTimes[1] = currentTime;
                 }
             case 0:
-                if(currentTime - previousTimes[0] >= 1500*difficultyLevel){
+                if(currentTime - previousTimes[0] >= 500 + 1500*difficultyLevel){
                     Game.enemiesRectangles.add(new EnemyRectangle( GameActivity.size.x/2, GameActivity.size.y/2, rnd.nextInt(179)+10, 75 + 75*(1-difficultyLevel), 3000,
                             ContextCompat.getColor(GameActivity.context, R.color.enemy), 500 + (int)(550*difficultyLevel), 1));
                     previousTimes[0] = currentTime;
